@@ -1,0 +1,134 @@
+[
+  {
+    "id": "rusty-sword",
+    "name": "Rusty Sword",
+    "category": "weapon",
+    "rarity": "uncommon",
+    "stats": { "attack": 3 },
+    "value": 10,
+    "description": "A weathered blade that's seen better days. Still sharp enough to draw blood."
+  },
+  {
+    "id": "wooden-club",
+    "name": "Wooden Club",
+    "category": "weapon",
+    "rarity": "common",
+    "stats": { "attack": 2 },
+    "value": 5,
+    "description": "A sturdy branch that serves as a crude weapon."
+  },
+  {
+    "id": "wooden-bow",
+    "name": "Wooden Bow",
+    "category": "weapon",
+    "rarity": "uncommon",
+    "stats": { "attack": 4, "critChance": 0.15 },
+    "value": 20,
+    "description": "A simple hunting bow. Quick and deadly in the right hands. 15% critical hit chance."
+  },
+  {
+    "id": "iron-axe",
+    "name": "Iron Axe",
+    "category": "weapon",
+    "rarity": "rare",
+    "stats": { "attack": 5, "critChance": 0.10 },
+    "value": 25,
+    "description": "A heavy woodcutter's axe. Brutal and effective. 10% critical hit chance."
+  },
+  {
+    "id": "steel-spear",
+    "name": "Steel Spear",
+    "category": "weapon",
+    "rarity": "epic",
+    "stats": { "attack": 6, "critChance": 0.20 },
+    "value": 35,
+    "description": "A well-balanced spear with a sharp tip. Strikes true more often than not. 20% critical hit chance."
+  },
+  {
+    "id": "assassins-dagger",
+    "name": "Assassin's Dagger",
+    "category": "weapon",
+    "rarity": "legendary",
+    "stats": { "attack": 4, "critChance": 0.35 },
+    "value": 40,
+    "description": "A curved blade designed for precision strikes. Deadly in skilled hands. 35% critical hit chance!"
+  },
+  {
+    "id": "leather-armor",
+    "name": "Leather Armor",
+    "category": "armor",
+    "rarity": "common",
+    "stats": { "defense": 2 },
+    "value": 15,
+    "description": "Basic protection for aspiring adventurers."
+  },
+  {
+    "id": "chainmail-armor",
+    "name": "Chainmail Armor",
+    "category": "armor",
+    "rarity": "rare",
+    "stats": { "defense": 4 },
+    "value": 30,
+    "description": "Interlocking metal rings that absorb blows. Heavier but much safer."
+  },
+  {
+    "id": "plate-armor",
+    "name": "Plate Armor",
+    "category": "armor",
+    "rarity": "legendary",
+    "stats": { "defense": 6 },
+    "value": 50,
+    "description": "Solid metal plates covering vital areas. The ultimate protection for warriors."
+  },
+  {
+    "id": "health-potion",
+    "name": "Health Potion",
+    "category": "consumable",
+    "rarity": "common",
+    "effect": { "type": "heal", "value": 20 },
+    "value": 12,
+    "stackable": true,
+    "maxStack": 5,
+    "description": "Restores 20 HP. Tastes like bitter herbs."
+  },
+  {
+    "id": "greater-health-potion",
+    "name": "Greater Health Potion",
+    "category": "consumable",
+    "rarity": "rare",
+    "effect": { "type": "heal", "value": 50 },
+    "value": 30,
+    "stackable": true,
+    "maxStack": 5,
+    "description": "Restores 50 HP. A powerful elixir brewed by master alchemists."
+  },
+  {
+    "id": "mega-health-potion",
+    "name": "Mega Health Potion",
+    "category": "consumable",
+    "rarity": "epic",
+    "effect": { "type": "heal", "value": 100 },
+    "value": 60,
+    "stackable": true,
+    "maxStack": 3,
+    "description": "Restores 100 HP. The pinnacle of healing magic."
+  },
+  {
+    "id": "gold-coins",
+    "name": "Tax Coins",
+    "category": "currency",
+    "rarity": "common",
+    "value": 1,
+    "stackable": true,
+    "maxStack": 999,
+    "description": "The realm's currency, stamped with the Tax Collector's seal. Heavy with bureaucratic burden."
+  },
+  {
+    "id": "tax-receipt",
+    "name": "Tax Receipt",
+    "category": "quest",
+    "rarity": "common",
+    "value": 0,
+    "description": "Proof of payment to the ever-hungry coffers of Grafton. Keep it safe."
+  }
+]

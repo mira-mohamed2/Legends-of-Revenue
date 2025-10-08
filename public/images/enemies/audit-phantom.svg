@@ -1,0 +1,53 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 200">
+  <!-- Audit Phantom -->
+  <defs>
+    <linearGradient id="ghostGlow" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" style="stop-color:#9b59b6;stop-opacity:0.8" />
+      <stop offset="100%" style="stop-color:#8e44ad;stop-opacity:0.5" />
+    </linearGradient>
+    <filter id="glow">
+      <feGaussianBlur stdDeviation="3" result="coloredBlur"/>
+      <feMerge>
+        <feMergeNode in="coloredBlur"/>
+        <feMergeNode in="SourceGraphic"/>
+      </feMerge>
+    </filter>
+  </defs>
+  
+  <!-- Ghost body (wavy) -->
+  <path d="M 100 50 Q 70 60 70 90 Q 70 130 100 150 Q 130 130 130 90 Q 130 60 100 50 Z" 
+        fill="url(#ghostGlow)" filter="url(#glow)" opacity="0.85"/>
+  
+  <!-- Wavy bottom -->
+  <path d="M 75 145 Q 85 155 95 145 Q 105 155 115 145 Q 125 155 130 145 L 130 130 Q 100 150 70 130 Z" 
+        fill="url(#ghostGlow)" opacity="0.7"/>
+  
+  <!-- Eyes (glowing) -->
+  <circle cx="85" cy="80" r="8" fill="#fff" opacity="0.9">
+    <animate attributeName="opacity" values="0.9;0.4;0.9" dur="2s" repeatCount="indefinite"/>
+  </circle>
+  <circle cx="115" cy="80" r="8" fill="#fff" opacity="0.9">
+    <animate attributeName="opacity" values="0.9;0.4;0.9" dur="2s" repeatCount="indefinite"/>
+  </circle>
+  <circle cx="85" cy="80" r="4" fill="#8e44ad"/>
+  <circle cx="115" cy="80" r="4" fill="#8e44ad"/>
+  
+  <!-- Mouth (O shape, haunting) -->
+  <ellipse cx="100" cy="105" rx="6" ry="10" fill="#000" opacity="0.6"/>
+  
+  <!-- Floating papers around it -->
+  <rect x="50" y="70" width="15" height="20" fill="#fff" opacity="0.6" transform="rotate(-15 57 80)">
+    <animateTransform attributeName="transform" type="rotate" 
+                      from="-15 57 80" to="5 57 80" dur="3s" repeatCount="indefinite"/>
+  </rect>
+  
+  <rect x="135" y="90" width="15" height="20" fill="#fff" opacity="0.6" transform="rotate(15 142 100)">
+    <animateTransform attributeName="transform" type="rotate" 
+                      from="15 142 100" to="-5 142 100" dur="3s" repeatCount="indefinite"/>
+  </rect>
+  
+  <!-- Spectral chains (representing audit trail) -->
+  <circle cx="65" cy="60" r="3" fill="#fff" opacity="0.5"/>
+  <circle cx="135" cy="60" r="3" fill="#fff" opacity="0.5"/>
+  <line x1="65" y1="60" x2="135" y2="60" stroke="#fff" stroke-width="2" opacity="0.4"/>
+</svg>

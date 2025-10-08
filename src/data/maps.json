@@ -1,0 +1,153 @@
+[
+  {
+    "id": "guild-hall",
+    "name": "MIRA Headquarters",
+    "type": "hub",
+    "description": "The central office of the Maldives Inland Revenue Authority. Revenue agents gather here to receive assignments and report their findings.",
+    "neighbors": ["merchants-row", "city-gates"],
+    "encounterRate": 0,
+    "encounterTable": [],
+    "questHooks": ["welcome-quest"]
+  },
+  {
+    "id": "merchants-row",
+    "name": "Business District",
+    "type": "town",
+    "description": "Legitimate businesses and shops line the street. Most pay their taxes... but some don't. Stay alert for suspicious activity.",
+    "neighbors": ["guild-hall", "back-alley", "abandoned-treasury"],
+    "encounterRate": 0.1,
+    "encounterTable": [
+      { "enemyId": "coin-rat", "weight": 10 }
+    ],
+    "questHooks": []
+  },
+  {
+    "id": "back-alley",
+    "name": "Black Market Alley",
+    "type": "dungeon",
+    "description": "A shadowy passage where untaxed goods are traded illegally. You can hear whispers of tax evasion schemes.",
+    "neighbors": ["merchants-row", "city-gates"],
+    "encounterRate": 0.4,
+    "encounterTable": [
+      { "enemyId": "coin-rat", "weight": 6 },
+      { "enemyId": "bandit-thief", "weight": 4 }
+    ],
+    "questHooks": []
+  },
+  {
+    "id": "city-gates",
+    "name": "Border Checkpoint",
+    "type": "town",
+    "description": "MIRA agents monitor this checkpoint for smugglers trying to move assets out of the country without paying taxes.",
+    "neighbors": ["guild-hall", "back-alley", "forest-path"],
+    "encounterRate": 0.15,
+    "encounterTable": [
+      { "enemyId": "tax-collector-minion", "weight": 7 },
+      { "enemyId": "corrupted-guard", "weight": 3 }
+    ],
+    "questHooks": []
+  },
+  {
+    "id": "forest-path",
+    "name": "Smuggler's Trail",
+    "type": "wilderness",
+    "description": "A hidden route through the jungle used by tax evaders to transport untaxed goods. Recent activity suggests increased smuggling.",
+    "neighbors": ["city-gates", "dark-grove"],
+    "encounterRate": 0.5,
+    "encounterTable": [
+      { "enemyId": "coin-rat", "weight": 5 },
+      { "enemyId": "bandit-thief", "weight": 5 }
+    ],
+    "questHooks": []
+  },
+  {
+    "id": "dark-grove",
+    "name": "Shady District",
+    "type": "dungeon",
+    "description": "An area known for unreported income and fraudulent businesses. A haven for those who refuse to pay their fair share.",
+    "neighbors": ["forest-path", "tax-collectors-office"],
+    "encounterRate": 0.7,
+    "encounterTable": [
+      { "enemyId": "bandit-thief", "weight": 4 },
+      { "enemyId": "corrupted-guard", "weight": 4 },
+      { "enemyId": "tax-collector-minion", "weight": 2 }
+    ],
+    "questHooks": ["find-the-tribute"]
+  },
+  {
+    "id": "tax-collectors-office",
+    "name": "Shell Company HQ",
+    "type": "dungeon",
+    "description": "A fake business front used to launder money and evade taxes. Stacks of falsified ledgers fill every corner.",
+    "neighbors": ["dark-grove", "underground-vault"],
+    "encounterRate": 0.65,
+    "encounterTable": [
+      { "enemyId": "tax-collector-minion", "weight": 6 },
+      { "enemyId": "corrupted-guard", "weight": 4 }
+    ],
+    "questHooks": []
+  },
+  {
+    "id": "underground-vault",
+    "name": "Hidden Vault",
+    "type": "dungeon",
+    "description": "A secret chamber where tax evaders hide their wealth from MIRA. Recovered funds will be returned to the people.",
+    "neighbors": ["tax-collectors-office", "black-market"],
+    "encounterRate": 0.8,
+    "encounterTable": [
+      { "enemyId": "corrupted-guard", "weight": 7 },
+      { "enemyId": "tax-collector-minion", "weight": 3 }
+    ],
+    "questHooks": []
+  },
+  {
+    "id": "black-market",
+    "name": "Illegal Trading Post",
+    "type": "town",
+    "description": "A clandestine bazaar where untaxed goods exchange hands. Tax evaders and smugglers gather in the shadows.",
+    "neighbors": ["underground-vault", "back-alley"],
+    "encounterRate": 0.2,
+    "encounterTable": [
+      { "enemyId": "coin-rat", "weight": 5 },
+      { "enemyId": "bandit-thief", "weight": 5 }
+    ],
+    "questHooks": []
+  },
+  {
+    "id": "abandoned-treasury",
+    "name": "Abandoned Warehouse",
+    "type": "dungeon",
+    "description": "Once a legitimate business, now a front for tax evasion. Rumors speak of hidden assets within.",
+    "neighbors": ["merchants-row", "tax-evasion-hideout"],
+    "encounterRate": 0.55,
+    "encounterTable": [
+      { "enemyId": "coin-rat", "weight": 3 },
+      { "enemyId": "bandit-thief", "weight": 4 },
+      { "enemyId": "corrupted-guard", "weight": 3 }
+    ],
+    "questHooks": []
+  },
+  {
+    "id": "tax-evasion-hideout",
+    "name": "Offshore Haven",
+    "type": "hub",
+    "description": "A secret location where the wealthy hide their assets from MIRA. Financial crimes are coordinated here.",
+    "neighbors": ["abandoned-treasury", "forest-path"],
+    "encounterRate": 0,
+    "encounterTable": [],
+    "questHooks": []
+  },
+  {
+    "id": "miras-palace",
+    "name": "Dragon's Lair",
+    "type": "dungeon",
+    "description": "The legendary home of Mira the Dragon, the most notorious tax evader in history. She hoards stolen wealth that belongs to the people.",
+    "neighbors": ["tax-collectors-office"],
+    "encounterRate": 0.9,
+    "encounterTable": [
+      { "enemyId": "corrupted-guard", "weight": 5 },
+      { "enemyId": "tax-collector-minion", "weight": 5 }
+    ],
+    "questHooks": []
+  }
+]

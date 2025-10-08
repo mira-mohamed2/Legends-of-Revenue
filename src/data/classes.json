@@ -1,0 +1,192 @@
+[
+  {
+    "id": "tax-rogue",
+    "name": "Tax Rogue",
+    "icon": "🗡️",
+    "description": "Masters of evasion and quick strikes. High critical chance and agility.",
+    "baseStats": {
+      "hpModifier": -20,
+      "attackModifier": 2,
+      "defenseModifier": -4,
+      "critChanceBonus": 15
+    },
+    "abilities": [
+      {
+        "id": "shadow-audit",
+        "name": "Shadow Audit",
+        "icon": "👻",
+        "description": "Turn invisible for 3 turns, evading all attacks",
+        "unlockLevel": 5,
+        "cooldown": 5,
+        "effects": [
+          { "type": "evade", "duration": 3, "chance": 100 }
+        ]
+      },
+      {
+        "id": "loophole-strike",
+        "name": "Loophole Strike",
+        "icon": "💥",
+        "description": "Critical hit with 3x damage",
+        "unlockLevel": 7,
+        "cooldown": 3,
+        "effects": [
+          { "type": "damage", "multiplier": 3, "guaranteedCrit": true }
+        ]
+      },
+      {
+        "id": "receipt-shred",
+        "name": "Receipt Shred",
+        "icon": "📄",
+        "description": "Reduce enemy defense by 50% for 2 turns",
+        "unlockLevel": 10,
+        "cooldown": 4,
+        "effects": [
+          { "type": "debuff", "stat": "defense", "amount": -50, "percent": true, "duration": 2 }
+        ]
+      }
+    ]
+  },
+  {
+    "id": "revenue-warrior",
+    "name": "Revenue Warrior",
+    "icon": "⚔️",
+    "description": "Tank class with high HP and defense. Protects allies and deals consistent damage.",
+    "baseStats": {
+      "hpModifier": 40,
+      "attackModifier": 0,
+      "defenseModifier": 6,
+      "critChanceBonus": -5
+    },
+    "abilities": [
+      {
+        "id": "tax-shield",
+        "name": "Tax Shield",
+        "icon": "🛡️",
+        "description": "Block all damage for 2 turns",
+        "unlockLevel": 5,
+        "cooldown": 6,
+        "effects": [
+          { "type": "block", "duration": 2, "amount": 100, "percent": true }
+        ]
+      },
+      {
+        "id": "audit-slam",
+        "name": "Audit Slam",
+        "icon": "🔨",
+        "description": "Heavy attack dealing 2x damage and stunning enemy for 1 turn",
+        "unlockLevel": 7,
+        "cooldown": 4,
+        "effects": [
+          { "type": "damage", "multiplier": 2 },
+          { "type": "stun", "duration": 1 }
+        ]
+      },
+      {
+        "id": "collection-rage",
+        "name": "Collection Rage",
+        "icon": "😡",
+        "description": "Increase attack by 50% for 3 turns",
+        "unlockLevel": 10,
+        "cooldown": 5,
+        "effects": [
+          { "type": "buff", "stat": "attack", "amount": 50, "percent": true, "duration": 3 }
+        ]
+      }
+    ]
+  },
+  {
+    "id": "offshore-mage",
+    "name": "Offshore Mage",
+    "icon": "🔮",
+    "description": "Harness the power of hidden assets. Deals massive magic damage from afar.",
+    "baseStats": {
+      "hpModifier": -30,
+      "attackModifier": 5,
+      "defenseModifier": -6,
+      "critChanceBonus": 5
+    },
+    "abilities": [
+      {
+        "id": "account-freeze",
+        "name": "Account Freeze",
+        "icon": "❄️",
+        "description": "Freeze enemy for 2 turns, preventing actions",
+        "unlockLevel": 5,
+        "cooldown": 5,
+        "effects": [
+          { "type": "freeze", "duration": 2 }
+        ]
+      },
+      {
+        "id": "asset-blast",
+        "name": "Asset Blast",
+        "icon": "💫",
+        "description": "Magic attack dealing 2.5x damage",
+        "unlockLevel": 7,
+        "cooldown": 3,
+        "effects": [
+          { "type": "damage", "multiplier": 2.5, "element": "magic" }
+        ]
+      },
+      {
+        "id": "money-laundering",
+        "name": "Money Laundering",
+        "icon": "💸",
+        "description": "Heal for 50% of damage dealt next turn",
+        "unlockLevel": 10,
+        "cooldown": 4,
+        "effects": [
+          { "type": "lifesteal", "amount": 50, "percent": true, "duration": 1 }
+        ]
+      }
+    ]
+  },
+  {
+    "id": "deduction-priest",
+    "name": "Deduction Priest",
+    "icon": "✨",
+    "description": "Support class with healing and buffs. Keeps the party alive through tax season.",
+    "baseStats": {
+      "hpModifier": 10,
+      "attackModifier": -2,
+      "defenseModifier": 2,
+      "critChanceBonus": 0
+    },
+    "abilities": [
+      {
+        "id": "write-off-heal",
+        "name": "Write-Off Heal",
+        "icon": "💚",
+        "description": "Restore 50 HP to self",
+        "unlockLevel": 5,
+        "cooldown": 3,
+        "effects": [
+          { "type": "heal", "amount": 50 }
+        ]
+      },
+      {
+        "id": "charitable-blessing",
+        "name": "Charitable Blessing",
+        "icon": "🌟",
+        "description": "Increase all stats by 25% for 3 turns",
+        "unlockLevel": 7,
+        "cooldown": 5,
+        "effects": [
+          { "type": "buff", "stat": "attack", "amount": 25, "percent": true, "duration": 3 },
+          { "type": "buff", "stat": "defense", "amount": 25, "percent": true, "duration": 3 }
+        ]
+      },
+      {
+        "id": "exemption-shield",
+        "name": "Exemption Shield",
+        "icon": "🛡️",
+        "description": "Grant immunity to next attack",
+        "unlockLevel": 10,
+        "cooldown": 4,
+        "effects": [
+          { "type": "immunity", "duration": 1 }
+        ]
+      }
+    ]
+  }
+]

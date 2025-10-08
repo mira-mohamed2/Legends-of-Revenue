@@ -1,0 +1,76 @@
+[
+  {
+    "id": "welcome-quest",
+    "title": "Welcome to MIRA",
+    "description": "The MIRA Director wants to speak with you about your first assignment as a Revenue Agent.",
+    "stages": [
+      {
+        "id": "talk-to-guild-master",
+        "type": "dialogue",
+        "description": "Speak with the MIRA Director at Headquarters",
+        "objectives": [
+          {
+            "id": "start-dialogue",
+            "type": "talk",
+            "targetId": "guild-master",
+            "completed": false
+          }
+        ],
+        "rewards": {
+          "xp": 50,
+          "gold": 25,
+          "items": [{ "id": "wooden-club", "quantity": 1 }]
+        }
+      }
+    ],
+    "status": "available",
+    "isMainQuest": true
+  },
+  {
+    "id": "find-the-tribute",
+    "title": "Recover Hidden Assets",
+    "description": "Intelligence reports suggest tax evaders are hiding wealth in the Shady District. Investigate and recover the funds.",
+    "stages": [
+      {
+        "id": "investigate-grove",
+        "type": "exploration",
+        "description": "Explore the Shady District and apprehend tax evaders",
+        "objectives": [
+          {
+            "id": "kill-enemies",
+            "type": "kill",
+            "targetId": "any",
+            "count": 3,
+            "currentCount": 0,
+            "completed": false
+          }
+        ],
+        "rewards": {
+          "xp": 100,
+          "gold": 50,
+          "items": []
+        }
+      },
+      {
+        "id": "return-to-collector",
+        "type": "dialogue",
+        "description": "Return to the City Gates and report your findings",
+        "objectives": [
+          {
+            "id": "talk-collector",
+            "type": "talk",
+            "targetId": "tax-collector",
+            "completed": false
+          }
+        ],
+        "rewards": {
+          "xp": 150,
+          "gold": 100,
+          "items": [{ "id": "tax-receipt", "quantity": 1 }]
+        }
+      }
+    ],
+    "status": "locked",
+    "isMainQuest": true
+  }
+]

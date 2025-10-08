@@ -1,0 +1,111 @@
+[
+  {
+    "id": "coin-rat",
+    "name": "Tax Dodger Rat",
+    "image": "/images/enemies/tax-collector.svg",
+    "stats": {
+      "hp": 15,
+      "maxHp": 15,
+      "attack": 4,
+      "defense": 1
+    },
+    "rewards": {
+      "xp": 15,
+      "gold": 8,
+      "items": [
+        { "id": "health-potion", "chance": 0.75 },
+        { "id": "wooden-club", "chance": 0.15 }
+      ]
+    },
+    "description": "A mangy rodent hoarding stolen coins. Even vermin try to evade MIRA's justice.",
+    "abilities": []
+  },
+  {
+    "id": "tax-collector-minion",
+    "name": "Petty Tax Evader",
+    "image": "/images/enemies/tax-collector.svg",
+    "stats": {
+      "hp": 25,
+      "maxHp": 25,
+      "attack": 6,
+      "defense": 3
+    },
+    "rewards": {
+      "xp": 30,
+      "gold": 20,
+      "items": [
+        { "id": "gold-coins", "chance": 0.8 },
+        { "id": "health-potion", "chance": 0.75 },
+        { "id": "wooden-bow", "chance": 0.25 },
+        { "id": "chainmail-armor", "chance": 0.20 }
+      ]
+    },
+    "description": "A small-time crook who hasn't filed taxes in years. Fights desperately to keep their ill-gotten gains.",
+    "abilities": [
+      {
+        "id": "demand-payment",
+        "name": "Desperate Evasion",
+        "trigger": "hp-below-50",
+        "effect": { "type": "damage-boost", "value": 2 }
+      }
+    ]
+  },
+  {
+    "id": "bandit-thief",
+    "name": "Offshore Accountant",
+    "image": "/images/enemies/audit-phantom.svg",
+    "stats": {
+      "hp": 20,
+      "maxHp": 20,
+      "attack": 7,
+      "defense": 2
+    },
+    "rewards": {
+      "xp": 25,
+      "gold": 15,
+      "items": [
+        { "id": "rusty-sword", "chance": 0.3 },
+        { "id": "gold-coins", "chance": 0.6 },
+        { "id": "health-potion", "chance": 0.75 },
+        { "id": "greater-health-potion", "chance": 0.15 },
+        { "id": "iron-axe", "chance": 0.20 },
+        { "id": "assassins-dagger", "chance": 0.10 }
+      ]
+    },
+    "description": "A shady financial advisor who helps the wealthy hide their money. Slippery as an eel.",
+    "abilities": []
+  },
+  {
+    "id": "corrupted-guard",
+    "name": "Corrupted Businessman",
+    "image": "/images/enemies/revenue-enforcer.svg",
+    "stats": {
+      "hp": 35,
+      "maxHp": 35,
+      "attack": 8,
+      "defense": 5
+    },
+    "rewards": {
+      "xp": 50,
+      "gold": 30,
+      "items": [
+        { "id": "leather-armor", "chance": 0.4 },
+        { "id": "health-potion", "chance": 0.75 },
+        { "id": "greater-health-potion", "chance": 0.30 },
+        { "id": "mega-health-potion", "chance": 0.05 },
+        { "id": "steel-spear", "chance": 0.30 },
+        { "id": "chainmail-armor", "chance": 0.25 },
+        { "id": "plate-armor", "chance": 0.10 }
+      ]
+    },
+    "description": "A wealthy merchant who bribes officials and falsifies records. Their suit is expensive, but their morals are cheap.",
+    "abilities": [
+      {
+        "id": "shield-wall",
+        "name": "Shield Wall",
+        "trigger": "combat-start",
+        "effect": { "type": "defense-boost", "value": 3 }
+      }
+    ]
+  }
+]

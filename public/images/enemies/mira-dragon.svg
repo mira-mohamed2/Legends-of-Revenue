@@ -1,0 +1,64 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 200">
+  <!-- MIRA Dragon -->
+  <defs>
+    <linearGradient id="dragonBody" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" style="stop-color:#27ae60;stop-opacity:1" />
+      <stop offset="100%" style="stop-color:#229954;stop-opacity:1" />
+    </linearGradient>
+    <linearGradient id="belly" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" style="stop-color:#52be80;stop-opacity:1" />
+      <stop offset="100%" style="stop-color:#58d68d;stop-opacity:1" />
+    </linearGradient>
+  </defs>
+  
+  <!-- Tail -->
+  <path d="M 140 150 Q 160 140 170 130 Q 180 125 185 135" 
+        stroke="url(#dragonBody)" stroke-width="12" fill="none" stroke-linecap="round"/>
+  
+  <!-- Body -->
+  <ellipse cx="100" cy="120" rx="45" ry="55" fill="url(#dragonBody)"/>
+  
+  <!-- Belly -->
+  <ellipse cx="100" cy="130" rx="30" ry="40" fill="url(#belly)"/>
+  
+  <!-- Wings -->
+  <path d="M 70 100 Q 40 80 30 90 Q 35 110 70 115 Z" fill="#1e8449" opacity="0.7"/>
+  <path d="M 130 100 Q 160 80 170 90 Q 165 110 130 115 Z" fill="#1e8449" opacity="0.7"/>
+  
+  <!-- Head -->
+  <circle cx="100" cy="65" r="32" fill="url(#dragonBody)"/>
+  
+  <!-- Horns -->
+  <polygon points="85,40 80,55 90,50" fill="#f39c12"/>
+  <polygon points="115,40 120,55 110,50" fill="#f39c12"/>
+  
+  <!-- Eyes (fierce) -->
+  <ellipse cx="88" cy="60" rx="8" ry="10" fill="#fff"/>
+  <ellipse cx="112" cy="60" rx="8" ry="10" fill="#fff"/>
+  <circle cx="88" cy="62" r="5" fill="#c0392b"/>
+  <circle cx="112" cy="62" r="5" fill="#c0392b"/>
+  
+  <!-- Nostrils with smoke -->
+  <ellipse cx="90" cy="75" rx="3" ry="4" fill="#000"/>
+  <ellipse cx="110" cy="75" rx="3" ry="4" fill="#000"/>
+  <path d="M 88 75 Q 85 70 83 65" stroke="#95a5a6" stroke-width="2" opacity="0.5" fill="none"/>
+  <path d="M 112 75 Q 115 70 117 65" stroke="#95a5a6" stroke-width="2" opacity="0.5" fill="none"/>
+  
+  <!-- Teeth/Fangs -->
+  <polygon points="95,80 93,88 97,88" fill="#fff"/>
+  <polygon points="105,80 103,88 107,88" fill="#fff"/>
+  
+  <!-- Scales on back -->
+  <circle cx="90" cy="100" r="4" fill="#1e8449" opacity="0.6"/>
+  <circle cx="100" cy="95" r="4" fill="#1e8449" opacity="0.6"/>
+  <circle cx="110" cy="100" r="4" fill="#1e8449" opacity="0.6"/>
+  
+  <!-- Claws -->
+  <path d="M 80 165 L 75 175 L 78 170 Z" fill="#000"/>
+  <path d="M 90 168 L 88 178 L 91 173 Z" fill="#000"/>
+  <path d="M 110 168 L 112 178 L 109 173 Z" fill="#000"/>
+  <path d="M 120 165 L 125 175 L 122 170 Z" fill="#000"/>
+  
+  <!-- MIRA text on belly -->
+  <text x="100" y="135" font-size="14" font-weight="bold" fill="#f39c12" text-anchor="middle">MIRA</text>
+</svg>

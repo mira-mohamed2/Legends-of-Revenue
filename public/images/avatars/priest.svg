@@ -1,0 +1,53 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 200">
+  <!-- Priest Avatar -->
+  <defs>
+    <linearGradient id="holyRobe" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" style="stop-color:#ecf0f1;stop-opacity:1" />
+      <stop offset="100%" style="stop-color:#bdc3c7;stop-opacity:1" />
+    </linearGradient>
+  </defs>
+  
+  <!-- Halo -->
+  <circle cx="100" cy="55" r="25" fill="none" stroke="#f39c12" stroke-width="3" opacity="0.7">
+    <animate attributeName="opacity" values="0.7;0.4;0.7" dur="3s" repeatCount="indefinite"/>
+  </circle>
+  
+  <!-- Face -->
+  <circle cx="100" cy="85" r="28" fill="#f0c674"/>
+  
+  <!-- Hair -->
+  <path d="M 75 75 Q 75 65 85 65 Q 100 60 115 65 Q 125 65 125 75" fill="#8B4513"/>
+  
+  <!-- Eyes (kind) -->
+  <circle cx="90" cy="83" r="3" fill="#000"/>
+  <circle cx="110" cy="83" r="3" fill="#000"/>
+  <path d="M 87 79 Q 90 77 93 79" stroke="#000" stroke-width="1" fill="none"/>
+  <path d="M 107 79 Q 110 77 113 79" stroke="#000" stroke-width="1" fill="none"/>
+  
+  <!-- Smile -->
+  <path d="M 88 95 Q 100 100 112 95" stroke="#000" stroke-width="2" fill="none"/>
+  
+  <!-- Robe -->
+  <path d="M 75 110 L 65 180 L 135 180 L 125 110" fill="url(#holyRobe)"/>
+  <ellipse cx="100" cy="110" rx="27" ry="10" fill="#ecf0f1"/>
+  
+  <!-- Cross necklace -->
+  <line x1="100" y1="115" x2="100" y2="130" stroke="#f39c12" stroke-width="3"/>
+  <line x1="95" y1="120" x2="105" y2="120" stroke="#f39c12" stroke-width="3"/>
+  
+  <!-- Sleeves -->
+  <rect x="65" y="125" width="15" height="30" fill="#ecf0f1" rx="3"/>
+  <rect x="120" y="125" width="15" height="30" fill="#ecf0f1" rx="3"/>
+  
+  <!-- Holy book -->
+  <rect x="50" y="145" width="20" height="25" fill="#8B4513" rx="2"/>
+  <line x1="60" y1="145" x2="60" y2="170" stroke="#f39c12" stroke-width="2"/>
+  
+  <!-- Sparkles of light -->
+  <circle cx="130" cy="100" r="2" fill="#f39c12" opacity="0.8">
+    <animate attributeName="opacity" values="0.8;0.2;0.8" dur="1.5s" repeatCount="indefinite"/>
+  </circle>
+  <circle cx="140" cy="110" r="2" fill="#f39c12" opacity="0.6">
+    <animate attributeName="opacity" values="0.6;0.1;0.6" dur="2s" repeatCount="indefinite"/>
+  </circle>
+</svg>

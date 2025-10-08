@@ -1,0 +1,73 @@
+@import url('https://fonts.googleapis.com/css2?family=Uncial+Antiqua&family=Crimson+Text:wght@400;600;700&display=swap');
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  body {
+    @apply font-body bg-parchment text-brown;
+    margin: 0;
+    min-height: 100vh;
+  }
+
+  h1, h2, h3, h4, h5, h6 {
+    @apply font-medieval;
+  }
+}
+
+@layer components {
+  .panel {
+    @apply bg-parchment-dark border-2 border-brown rounded-lg shadow-lg p-4;
+  }
+
+  .btn-primary {
+    @apply bg-emerald hover:bg-emerald-light text-parchment font-semibold py-2 px-4 rounded transition-colors cursor-pointer;
+  }
+
+  .btn-secondary {
+    @apply bg-gold hover:bg-gold-light text-brown font-semibold py-2 px-4 rounded transition-colors cursor-pointer;
+  }
+
+  .btn-danger {
+    @apply bg-red-700 hover:bg-red-800 text-white font-semibold py-2 px-4 rounded transition-colors cursor-pointer;
+  }
+}
+
+/* Medieval decorative borders */
+.border-ornate {
+  border-image: linear-gradient(45deg, #c99a2e, #1f5d3b, #c99a2e) 1;
+}
+
+/* Parchment texture overlay */
+body::before {
+  content: '';
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-image: 
+    linear-gradient(0deg, transparent 24%, rgba(59, 43, 26, 0.05) 25%, rgba(59, 43, 26, 0.05) 26%, transparent 27%, transparent 74%, rgba(59, 43, 26, 0.05) 75%, rgba(59, 43, 26, 0.05) 76%, transparent 77%, transparent),
+    linear-gradient(90deg, transparent 24%, rgba(59, 43, 26, 0.05) 25%, rgba(59, 43, 26, 0.05) 26%, transparent 27%, transparent 74%, rgba(59, 43, 26, 0.05) 75%, rgba(59, 43, 26, 0.05) 76%, transparent 77%, transparent);
+  background-size: 50px 50px;
+  pointer-events: none;
+  z-index: -1;
+  opacity: 0.3;
+}
+
+/* Achievement notification animation */
+@keyframes slideIn {
+  from {
+    transform: translateX(400px);
+    opacity: 0;
+  }
+  to {
+    transform: translateX(0);
+    opacity: 1;
+  }
+}
+
+.animate-slide-in {
+  animation: slideIn 0.5s ease-out;
+}
