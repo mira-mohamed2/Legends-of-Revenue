@@ -24,10 +24,10 @@ export const MenuBar: React.FC<MenuBarProps> = ({ activeView, onNavigate }) => {
   
   return (
     <>
-      <div className="sticky top-0 z-40 bg-gradient-to-r from-amber-50 via-orange-50 to-amber-50 border-b-4 border-amber-800 shadow-xl animate-fade-in">
+      <div className="sticky top-0 z-40 bg-gradient-to-r from-amber-100 via-orange-100 to-amber-100 border-b-4 border-amber-700 shadow-xl animate-fade-in">
         <div className="container mx-auto px-4">
         {/* Top Row: Logo, Stats, and Actions */}
-        <div className="flex items-center justify-between py-3 border-b-2 border-amber-300">
+        <div className="flex items-center justify-between py-3 border-b-2 border-amber-400">
           {/* Logo */}
           <div className="flex items-center gap-2 min-w-[200px]">
             <span className="text-2xl">💰</span>
@@ -38,19 +38,19 @@ export const MenuBar: React.FC<MenuBarProps> = ({ activeView, onNavigate }) => {
           
           {/* Player Stats - Centered */}
           <div className="flex items-center gap-2 text-xs font-body flex-1 justify-center">
-            <div className="flex items-center gap-1 bg-white px-3 py-1.5 rounded-lg border-2 border-amber-600 shadow-sm hover-lift">
-              <span className="text-amber-700">👤</span>
-              <span className="font-bold text-amber-900">{currentUser || 'Agent'}</span>
+            <div className="flex items-center gap-1 bg-white px-3 py-1.5 rounded-lg border-2 border-teal-600 shadow-sm hover-lift">
+              <span className="text-teal-700">👤</span>
+              <span className="font-bold text-teal-900">{currentUser || 'Agent'}</span>
             </div>
             <div className="flex items-center gap-1 bg-white px-3 py-1.5 rounded-lg border-2 border-purple-600 shadow-sm hover-lift">
               <span className="text-purple-600">⭐</span>
               <span className="font-bold text-purple-900">Lv {stats.level}</span>
             </div>
-            <div className="flex items-center gap-1 bg-gradient-to-br from-yellow-200 to-amber-300 px-3 py-1.5 rounded-lg border-2 border-yellow-600 shadow-sm hover-lift">
+            <div className="flex items-center gap-1 bg-gradient-to-br from-yellow-200 to-orange-300 px-3 py-1.5 rounded-lg border-2 border-orange-500 shadow-sm hover-lift">
               <span>💰</span>
-              <span className="font-bold text-amber-900">{stats.gold}</span>
+              <span className="font-bold text-orange-900">{stats.gold}</span>
             </div>
-            <div className="hidden sm:flex items-center gap-1 bg-gradient-to-br from-red-100 to-pink-100 px-3 py-1.5 rounded-lg border-2 border-red-600 shadow-sm hover-lift">
+            <div className="hidden sm:flex items-center gap-1 bg-gradient-to-br from-red-100 to-pink-100 px-3 py-1.5 rounded-lg border-2 border-red-500 shadow-sm hover-lift">
               <span>❤️</span>
               <span className="font-bold text-red-700">{stats.hp}/{stats.maxHp}</span>
             </div>
@@ -63,7 +63,7 @@ export const MenuBar: React.FC<MenuBarProps> = ({ activeView, onNavigate }) => {
             
             {/* Logout */}
             <button
-              className="px-4 py-2 rounded-lg bg-gradient-to-br from-red-600 to-red-700 text-white hover:from-red-700 hover:to-red-800 font-body text-xs font-semibold transition-all duration-300 hover:shadow-lg hover:-translate-y-0.5 border border-red-800"
+              className="px-4 py-2 rounded-lg bg-gradient-to-br from-red-500 to-red-600 text-white hover:from-red-600 hover:to-red-700 font-body text-xs font-semibold transition-all duration-300 hover:shadow-lg hover:-translate-y-0.5 border-2 border-red-700"
               onClick={() => {
                 if (confirm('Logout? Your progress is saved.')) {
                   window.location.reload();
@@ -76,7 +76,7 @@ export const MenuBar: React.FC<MenuBarProps> = ({ activeView, onNavigate }) => {
         </div>
         
         {/* Bottom Row: Menu Navigation */}
-        <div className="flex items-center justify-center py-3 bg-gradient-to-r from-amber-100 via-orange-100 to-amber-100">
+        <div className="flex items-center justify-center py-3 bg-gradient-to-r from-orange-100 via-amber-100 to-orange-100">
           <nav className="flex gap-2">
             {menuItems.map((item) => (
               <button
@@ -86,9 +86,9 @@ export const MenuBar: React.FC<MenuBarProps> = ({ activeView, onNavigate }) => {
                 className={`
                   px-4 py-2 rounded-lg font-medieval transition-all duration-300 text-sm font-semibold border-2
                   ${activeView === item.id
-                    ? 'bg-gradient-to-br from-emerald-500 to-emerald-600 text-white shadow-lg transform scale-105 border-emerald-700'
+                    ? 'bg-gradient-to-br from-teal-500 to-teal-600 text-white shadow-lg transform scale-105 border-teal-700'
                     : item.available
-                      ? 'bg-white text-amber-900 hover:bg-amber-50 hover:shadow-md hover:-translate-y-0.5 border-amber-400'
+                      ? 'bg-white text-teal-900 hover:bg-teal-50 hover:shadow-md hover:-translate-y-0.5 border-teal-500'
                       : 'bg-gray-200 text-gray-500 cursor-not-allowed opacity-50 border-gray-300'
                   }
                 `}

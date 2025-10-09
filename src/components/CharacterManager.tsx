@@ -103,7 +103,7 @@ export default function CharacterManager() {
           setShowManager(!showManager);
           if (!showManager) refreshCharacters();
         }}
-        className="bg-gradient-to-br from-blue-500 to-blue-600 hover:from-blue-600 hover:to-blue-700 text-white border-2 border-blue-700 px-4 py-2 rounded-lg shadow-md transition-all duration-300 hover:shadow-lg hover:-translate-y-0.5"
+        className="bg-gradient-to-br from-teal-500 to-teal-600 hover:from-teal-600 hover:to-teal-700 text-white border-2 border-teal-700 px-4 py-2 rounded-lg shadow-md transition-all duration-300 hover:shadow-lg hover:-translate-y-0.5"
         title="Character Manager"
       >
         <span className="text-base">💾</span>
@@ -112,12 +112,12 @@ export default function CharacterManager() {
 
       {/* Manager Panel */}
       {showManager && (
-        <div className="absolute top-14 right-0 bg-white border-2 border-blue-700 rounded-lg shadow-2xl w-96 p-5 animate-scale-in z-50">
-          <div className="flex items-center justify-between mb-4 pb-3 border-b-2 border-blue-200">
-            <h3 className="text-lg font-bold text-blue-900">Character Manager</h3>
+        <div className="absolute top-14 right-0 bg-gradient-to-br from-amber-50 to-orange-50 border-2 border-teal-600 rounded-lg shadow-2xl w-96 p-5 animate-scale-in z-50">
+          <div className="flex items-center justify-between mb-4 pb-3 border-b-2 border-teal-300">
+            <h3 className="text-lg font-bold text-teal-900">Character Manager</h3>
             <button
               onClick={() => setShowManager(false)}
-              className="text-blue-600 hover:text-blue-900 text-xl transition-all duration-300 hover:scale-110"
+              className="text-teal-600 hover:text-teal-900 text-xl transition-all duration-300 hover:scale-110"
             >
               ✕
             </button>
@@ -125,9 +125,9 @@ export default function CharacterManager() {
 
           {/* Current Character */}
           {currentUser && (
-            <div className="mb-4 p-3 bg-gradient-to-br from-yellow-100 to-amber-100 border-2 border-amber-500 rounded-lg hover-lift">
-              <div className="text-xs text-amber-700 mb-1 font-semibold">Current Character</div>
-              <div className="font-bold text-amber-900">{currentUser}</div>
+            <div className="mb-4 p-3 bg-gradient-to-br from-orange-200 to-amber-200 border-2 border-orange-500 rounded-lg hover-lift">
+              <div className="text-xs text-orange-800 mb-1 font-semibold">Current Character</div>
+              <div className="font-bold text-orange-900">{currentUser}</div>
             </div>
           )}
 
@@ -136,13 +136,13 @@ export default function CharacterManager() {
             <button
               onClick={handleExportCurrent}
               disabled={!currentUser}
-              className="bg-gradient-to-br from-blue-500 to-blue-600 hover:from-blue-600 hover:to-blue-700 disabled:from-gray-300 disabled:to-gray-400 text-white border-2 border-blue-700 disabled:border-gray-500 px-3 py-2 rounded-lg text-sm font-semibold transition-all duration-300 disabled:cursor-not-allowed hover:shadow-lg hover:-translate-y-0.5"
+              className="bg-gradient-to-br from-teal-500 to-teal-600 hover:from-teal-600 hover:to-teal-700 disabled:from-gray-300 disabled:to-gray-400 text-white border-2 border-teal-700 disabled:border-gray-500 px-3 py-2 rounded-lg text-sm font-semibold transition-all duration-300 disabled:cursor-not-allowed hover:shadow-lg hover:-translate-y-0.5"
             >
               📥 Export Current
             </button>
             <button
               onClick={handleImport}
-              className="bg-gradient-to-br from-green-500 to-green-600 hover:from-green-600 hover:to-green-700 text-white border-2 border-green-700 px-3 py-2 rounded-lg text-sm font-semibold transition-all duration-300 hover:shadow-lg hover:-translate-y-0.5"
+              className="bg-gradient-to-br from-orange-500 to-orange-600 hover:from-orange-600 hover:to-orange-700 text-white border-2 border-orange-700 px-3 py-2 rounded-lg text-sm font-semibold transition-all duration-300 hover:shadow-lg hover:-translate-y-0.5"
             >
               📤 Import Character
             </button>
@@ -155,14 +155,14 @@ export default function CharacterManager() {
           </div>
 
           {/* Character List */}
-          <div className="border-t-2 border-blue-200 pt-4">
-            <div className="text-xs text-blue-700 mb-2 font-semibold">
+          <div className="border-t-2 border-teal-300 pt-4">
+            <div className="text-xs text-teal-700 mb-2 font-semibold">
               Saved Characters ({characters.length})
             </div>
             
             <div className="space-y-2 max-h-96 overflow-y-auto">
               {characters.length === 0 ? (
-                <div className="text-xs text-blue-600 italic text-center py-4">
+                <div className="text-xs text-teal-600 italic text-center py-4">
                   No characters found. Create a new character or import one.
                 </div>
               ) : (

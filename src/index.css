@@ -6,7 +6,7 @@
 
 @layer base {
   body {
-    @apply font-body bg-gradient-to-br from-emerald-50 via-teal-50 to-cyan-50 text-gray-800;
+    @apply font-body bg-gradient-to-br from-teal-50 via-cyan-50 to-teal-100 text-gray-800;
     margin: 0;
     min-height: 100vh;
     overflow-x: hidden;
@@ -23,17 +23,17 @@
 
 @layer components {
   .panel {
-    @apply bg-white border-2 border-amber-300 rounded-xl shadow-lg p-4;
+    @apply bg-gradient-to-br from-amber-50 to-orange-50 border-2 border-amber-600 rounded-xl shadow-lg p-4;
     transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
   }
   
   .panel:hover {
-    @apply shadow-2xl border-amber-400;
+    @apply shadow-2xl border-amber-700;
     transform: translateY(-2px);
   }
 
   .btn-primary {
-    @apply bg-gradient-to-br from-emerald-500 to-emerald-600 hover:from-emerald-600 hover:to-emerald-700 text-white font-semibold py-2 px-4 rounded-lg cursor-pointer border-2 border-emerald-700;
+    @apply bg-gradient-to-br from-teal-500 to-teal-600 hover:from-teal-600 hover:to-teal-700 text-white font-semibold py-2 px-4 rounded-lg cursor-pointer border-2 border-teal-700;
     transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
     position: relative;
     overflow: hidden;
@@ -41,7 +41,7 @@
   
   .btn-primary:hover {
     transform: translateY(-2px);
-    box-shadow: 0 6px 16px rgba(16, 185, 129, 0.4);
+    box-shadow: 0 6px 16px rgba(20, 184, 166, 0.4);
   }
   
   .btn-primary:active {
@@ -49,7 +49,7 @@
   }
 
   .btn-secondary {
-    @apply bg-gradient-to-br from-amber-400 to-amber-500 hover:from-amber-500 hover:to-amber-600 text-white font-semibold py-2 px-4 rounded-lg cursor-pointer border-2 border-amber-600;
+    @apply bg-gradient-to-br from-orange-400 to-orange-500 hover:from-orange-500 hover:to-orange-600 text-white font-semibold py-2 px-4 rounded-lg cursor-pointer border-2 border-orange-600;
     transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
     position: relative;
     overflow: hidden;
@@ -57,7 +57,7 @@
   
   .btn-secondary:hover {
     transform: translateY(-2px);
-    box-shadow: 0 6px 16px rgba(245, 158, 11, 0.4);
+    box-shadow: 0 6px 16px rgba(251, 146, 60, 0.4);
   }
   
   .btn-secondary:active {
@@ -65,13 +65,13 @@
   }
 
   .btn-danger {
-    @apply bg-gradient-to-br from-red-600 to-red-700 hover:from-red-700 hover:to-red-800 text-white font-semibold py-2 px-4 rounded-lg cursor-pointer border-2 border-red-800;
+    @apply bg-gradient-to-br from-red-500 to-red-600 hover:from-red-600 hover:to-red-700 text-white font-semibold py-2 px-4 rounded-lg cursor-pointer border-2 border-red-700;
     transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
   }
   
   .btn-danger:hover {
     transform: translateY(-2px);
-    box-shadow: 0 6px 16px rgba(220, 38, 38, 0.4);
+    box-shadow: 0 6px 16px rgba(239, 68, 68, 0.4);
   }
   
   .btn-danger:active {
