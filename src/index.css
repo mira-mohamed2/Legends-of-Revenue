@@ -6,7 +6,7 @@
 
 @layer base {
   body {
-    @apply font-body bg-parchment text-brown;
+    @apply font-body bg-gradient-to-br from-emerald-50 via-teal-50 to-cyan-50 text-gray-800;
     margin: 0;
     min-height: 100vh;
     overflow-x: hidden;
@@ -23,17 +23,17 @@
 
 @layer components {
   .panel {
-    @apply bg-parchment-dark border-2 border-brown rounded-lg shadow-lg p-4;
+    @apply bg-white border-2 border-amber-300 rounded-xl shadow-lg p-4;
     transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
   }
   
   .panel:hover {
-    @apply shadow-xl;
+    @apply shadow-2xl border-amber-400;
     transform: translateY(-2px);
   }
 
   .btn-primary {
-    @apply bg-emerald hover:bg-emerald-light text-parchment font-semibold py-2 px-4 rounded cursor-pointer;
+    @apply bg-gradient-to-br from-emerald-500 to-emerald-600 hover:from-emerald-600 hover:to-emerald-700 text-white font-semibold py-2 px-4 rounded-lg cursor-pointer border-2 border-emerald-700;
     transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
     position: relative;
     overflow: hidden;
@@ -41,7 +41,7 @@
   
   .btn-primary:hover {
     transform: translateY(-2px);
-    box-shadow: 0 4px 12px rgba(31, 93, 59, 0.3);
+    box-shadow: 0 6px 16px rgba(16, 185, 129, 0.4);
   }
   
   .btn-primary:active {
@@ -49,7 +49,7 @@
   }
 
   .btn-secondary {
-    @apply bg-gold hover:bg-gold-light text-brown font-semibold py-2 px-4 rounded cursor-pointer;
+    @apply bg-gradient-to-br from-amber-400 to-amber-500 hover:from-amber-500 hover:to-amber-600 text-white font-semibold py-2 px-4 rounded-lg cursor-pointer border-2 border-amber-600;
     transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
     position: relative;
     overflow: hidden;
@@ -57,7 +57,7 @@
   
   .btn-secondary:hover {
     transform: translateY(-2px);
-    box-shadow: 0 4px 12px rgba(201, 154, 46, 0.3);
+    box-shadow: 0 6px 16px rgba(245, 158, 11, 0.4);
   }
   
   .btn-secondary:active {
@@ -65,13 +65,13 @@
   }
 
   .btn-danger {
-    @apply bg-red-700 hover:bg-red-800 text-white font-semibold py-2 px-4 rounded cursor-pointer;
+    @apply bg-gradient-to-br from-red-600 to-red-700 hover:from-red-700 hover:to-red-800 text-white font-semibold py-2 px-4 rounded-lg cursor-pointer border-2 border-red-800;
     transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
   }
   
   .btn-danger:hover {
     transform: translateY(-2px);
-    box-shadow: 0 4px 12px rgba(185, 28, 28, 0.3);
+    box-shadow: 0 6px 16px rgba(220, 38, 38, 0.4);
   }
   
   .btn-danger:active {
@@ -81,24 +81,7 @@
 
 /* Medieval decorative borders */
 .border-ornate {
-  border-image: linear-gradient(45deg, #c99a2e, #1f5d3b, #c99a2e) 1;
-}
-
-/* Parchment texture overlay */
-body::before {
-  content: '';
-  position: fixed;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  background-image: 
-    linear-gradient(0deg, transparent 24%, rgba(59, 43, 26, 0.05) 25%, rgba(59, 43, 26, 0.05) 26%, transparent 27%, transparent 74%, rgba(59, 43, 26, 0.05) 75%, rgba(59, 43, 26, 0.05) 76%, transparent 77%, transparent),
-    linear-gradient(90deg, transparent 24%, rgba(59, 43, 26, 0.05) 25%, rgba(59, 43, 26, 0.05) 26%, transparent 27%, transparent 74%, rgba(59, 43, 26, 0.05) 75%, rgba(59, 43, 26, 0.05) 76%, transparent 77%, transparent);
-  background-size: 50px 50px;
-  pointer-events: none;
-  z-index: -1;
-  opacity: 0.3;
+  border-image: linear-gradient(45deg, #f59e0b, #10b981, #f59e0b) 1;
 }
 
 /* Achievement notification animation */
@@ -205,22 +188,22 @@ html {
 }
 
 ::-webkit-scrollbar-track {
-  background: #f5e6d3;
+  background: #f0fdfa;
 }
 
 ::-webkit-scrollbar-thumb {
-  background: #8b6f47;
+  background: #14b8a6;
   border-radius: 5px;
   transition: background 0.3s ease;
 }
 
 ::-webkit-scrollbar-thumb:hover {
-  background: #6d5636;
+  background: #0d9488;
 }
 
 /* Loading skeleton animation */
 .skeleton {
-  background: linear-gradient(90deg, #e0d5c7 25%, #f0e8dc 50%, #e0d5c7 75%);
+  background: linear-gradient(90deg, #e0f2fe 25%, #f0f9ff 50%, #e0f2fe 75%);
   background-size: 200% 100%;
   animation: loading 1.5s ease-in-out infinite;
 }
@@ -239,9 +222,9 @@ button:focus-visible,
 input:focus-visible,
 select:focus-visible,
 textarea:focus-visible {
-  outline: 2px solid #c99a2e;
+  outline: 2px solid #f59e0b;
   outline-offset: 2px;
-  box-shadow: 0 0 0 4px rgba(201, 154, 46, 0.2);
+  box-shadow: 0 0 0 4px rgba(245, 158, 11, 0.2);
 }
 
 /* Reduce motion for accessibility */

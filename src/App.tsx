@@ -49,12 +49,12 @@ function App() {
   };
   
   return (
-    <div className="min-h-screen bg-gradient-to-b from-emerald-900 to-emerald-950">
-      {/* Menu Bar */}
+    <div className="min-h-screen bg-gradient-to-br from-emerald-50 via-teal-50 to-cyan-50">
+      {/* Menu Bar - Sticky */}
       <MenuBar activeView={activeView} onNavigate={setActiveView} />
       
-      {/* Main Content */}
-      <div className="container mx-auto">
+      {/* Main Content - Add padding to prevent overlap */}
+      <div className="container mx-auto pt-4 pb-8">
         {renderView()}
       </div>
       
