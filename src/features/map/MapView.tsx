@@ -39,43 +39,43 @@ export const MapView: React.FC = () => {
   const isFullyExplored = currentProgress >= 10;
   
   return (
-    <div className="panel p-3">
+    <div className="panel p-4 animate-fade-in">
       {/* Current Location - Compact Header */}
-      <div className="mb-3">
-        <div className="flex items-center justify-between mb-1">
-          <h2 className="font-medieval text-lg text-gold flex items-center gap-1.5">
-            <span className="text-2xl">{getLocationIcon(tile?.type || '')}</span>
+      <div className="mb-4">
+        <div className="flex items-center justify-between mb-2">
+          <h2 className="font-medieval text-xl text-gold flex items-center gap-2">
+            <span className="text-3xl">{getLocationIcon(tile?.type || '')}</span>
             {tile?.name || 'Unknown Location'}
           </h2>
-          <div className={`px-2 py-0.5 rounded-full text-xs ${danger.bg} border ${danger.color.replace('text-', 'border-')}`}>
+          <div className={`px-3 py-1 rounded-full text-sm ${danger.bg} border ${danger.color.replace('text-', 'border-')} hover-lift`}>
             <span className={`font-bold ${danger.color}`}>
               {danger.text}
             </span>
           </div>
         </div>
         
-        <p className="font-body text-xs text-brown-800 mb-2">
+        <p className="font-body text-sm text-brown-800 mb-3">
           {tile?.description}
         </p>
         
         {/* Exploration Progress - Compact */}
-        <div className="mb-2 p-2 bg-emerald-100 rounded border border-emerald-600">
-          <div className="flex justify-between items-center mb-1">
-            <span className="text-xs font-bold text-emerald-900">
+        <div className="mb-3 p-3 bg-emerald-100 rounded border border-emerald-600 hover-lift">
+          <div className="flex justify-between items-center mb-1.5">
+            <span className="text-sm font-bold text-emerald-900">
               🗺️ Exploration:
             </span>
-            <span className="text-xs font-bold text-emerald-700">
+            <span className="text-sm font-bold text-emerald-700">
               {currentProgress}/10
             </span>
           </div>
-          <div className="w-full bg-parchment-200 rounded-full h-2 border border-emerald-700 overflow-hidden">
+          <div className="w-full bg-parchment-200 rounded-full h-2.5 border border-emerald-700 overflow-hidden">
             <div 
-              className="h-full bg-emerald-600 transition-all"
+              className="h-full bg-emerald-600 transition-all duration-500"
               style={{ width: `${(currentProgress / 10) * 100}%` }}
             />
           </div>
           {!isFullyExplored && (
-            <p className="text-[10px] text-emerald-800 mt-1">
+            <p className="text-xs text-emerald-800 mt-1.5">
               {stepsRemaining} more step{stepsRemaining !== 1 ? 's' : ''} to unlock neighbors
             </p>
           )}

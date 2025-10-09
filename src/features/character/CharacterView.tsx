@@ -62,27 +62,27 @@ export const CharacterView: React.FC = () => {
   };
   
   return (
-    <div className="panel p-3">
+    <div className="panel p-4 animate-fade-in">
       {/* Header with Avatar */}
-      <div className="flex items-center justify-between mb-3">
-        <h2 className="font-medieval text-xl text-gold">Character</h2>
+      <div className="flex items-center justify-between mb-4">
+        <h2 className="font-medieval text-2xl text-gold">Character</h2>
         <AvatarSelector />
       </div>
       
       {/* Compact 2-Column Layout */}
-      <div className="grid grid-cols-1 lg:grid-cols-2 gap-3 mb-3">
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 mb-4">
         
         {/* Left Column: Stats & Equipment */}
-        <div className="space-y-3">
+        <div className="space-y-4">
           
           {/* Stats - Compact */}
-          <div className="bg-parchment-200 p-2 rounded border border-brown-600">
-            <h3 className="font-medieval text-sm text-emerald-800 mb-1 border-b border-brown-400 pb-1">📊 Stats</h3>
-            <div className="grid grid-cols-2 gap-x-3 gap-y-1 font-body text-xs text-brown-800">
+          <div className="bg-parchment-200 p-3 rounded border border-brown-600 hover-lift">
+            <h3 className="font-medieval text-base text-emerald-800 mb-2 border-b border-brown-400 pb-1">📊 Stats</h3>
+            <div className="grid grid-cols-2 gap-x-4 gap-y-2 font-body text-sm text-brown-800">
               <div className="flex justify-between">
                 <span>Level:</span>
                 <span className="font-bold">
-                  {stats.level}{stats.level >= 10 && <span className="text-[10px] text-gold"> MAX</span>}
+                  {stats.level}{stats.level >= 10 && <span className="text-xs text-gold"> MAX</span>}
                 </span>
               </div>
               <div className="flex justify-between">
@@ -92,11 +92,11 @@ export const CharacterView: React.FC = () => {
               
               {/* HP with inline bar */}
               <div className="col-span-2">
-                <div className="flex justify-between mb-0.5">
+                <div className="flex justify-between mb-1">
                   <span>HP:</span>
                   <span className="font-bold text-red-700">{stats.hp}/{stats.maxHp}</span>
                 </div>
-                <div className="w-full bg-gray-300 rounded-full h-2 border border-brown-600">
+                <div className="w-full bg-gray-300 rounded-full h-2.5 border border-brown-600">
                   <div 
                     className="h-full bg-gradient-to-r from-red-600 to-red-500 transition-all"
                     style={{ width: `${(stats.hp / stats.maxHp) * 100}%` }}

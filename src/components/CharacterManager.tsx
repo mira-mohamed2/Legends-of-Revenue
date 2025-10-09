@@ -103,7 +103,7 @@ export default function CharacterManager() {
           setShowManager(!showManager);
           if (!showManager) refreshCharacters();
         }}
-        className="bg-parchment-300 hover:bg-parchment-400 border-2 border-medieval-800 px-3 py-2 rounded-lg shadow-lg transition-colors"
+        className="bg-parchment-300 hover:bg-parchment-400 border-2 border-medieval-800 px-4 py-2 rounded-lg shadow-lg transition-all duration-300 hover:shadow-xl hover:-translate-y-1"
         title="Character Manager"
       >
         <span className="text-xl">💾</span>
@@ -112,12 +112,12 @@ export default function CharacterManager() {
 
       {/* Manager Panel */}
       {showManager && (
-        <div className="absolute top-12 right-0 bg-parchment-100 border-2 border-medieval-800 rounded-lg shadow-2xl w-96 p-4">
-          <div className="flex items-center justify-between mb-3 pb-2 border-b-2 border-medieval-300">
+        <div className="absolute top-14 right-0 bg-parchment-100 border-2 border-medieval-800 rounded-lg shadow-2xl w-96 p-5 animate-scale-in">
+          <div className="flex items-center justify-between mb-4 pb-3 border-b-2 border-medieval-300">
             <h3 className="text-lg font-bold text-medieval-900">Character Manager</h3>
             <button
               onClick={() => setShowManager(false)}
-              className="text-medieval-600 hover:text-medieval-900 text-xl"
+              className="text-medieval-600 hover:text-medieval-900 text-xl transition-all duration-300 hover:scale-110"
             >
               ✕
             </button>
@@ -125,7 +125,7 @@ export default function CharacterManager() {
 
           {/* Current Character */}
           {currentUser && (
-            <div className="mb-4 p-3 bg-gold-light border border-gold-dark rounded">
+            <div className="mb-4 p-3 bg-gold-light border border-gold-dark rounded hover-lift">
               <div className="text-xs text-medieval-700 mb-1">Current Character</div>
               <div className="font-bold text-medieval-900">{currentUser}</div>
             </div>
@@ -136,26 +136,26 @@ export default function CharacterManager() {
             <button
               onClick={handleExportCurrent}
               disabled={!currentUser}
-              className="bg-blue-100 hover:bg-blue-200 disabled:bg-gray-200 border border-blue-600 px-3 py-2 rounded text-sm transition-colors disabled:cursor-not-allowed"
+              className="bg-blue-100 hover:bg-blue-200 disabled:bg-gray-200 border border-blue-600 px-3 py-2 rounded text-sm transition-all duration-300 disabled:cursor-not-allowed hover:shadow-md hover:-translate-y-0.5"
             >
               📥 Export Current
             </button>
             <button
               onClick={handleImport}
-              className="bg-green-100 hover:bg-green-200 border border-green-600 px-3 py-2 rounded text-sm transition-colors"
+              className="bg-green-100 hover:bg-green-200 border border-green-600 px-3 py-2 rounded text-sm transition-all duration-300 hover:shadow-md hover:-translate-y-0.5"
             >
               📤 Import Character
             </button>
             <button
               onClick={handleExportAll}
-              className="col-span-2 bg-purple-100 hover:bg-purple-200 border border-purple-600 px-3 py-2 rounded text-sm transition-colors"
+              className="col-span-2 bg-purple-100 hover:bg-purple-200 border border-purple-600 px-3 py-2 rounded text-sm transition-all duration-300 hover:shadow-md hover:-translate-y-0.5"
             >
               📦 Export All Characters
             </button>
           </div>
 
           {/* Character List */}
-          <div className="border-t-2 border-medieval-300 pt-3">
+          <div className="border-t-2 border-medieval-300 pt-4">
             <div className="text-xs text-medieval-700 mb-2 font-semibold">
               Saved Characters ({characters.length})
             </div>

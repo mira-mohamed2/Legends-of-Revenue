@@ -88,15 +88,15 @@ export const MarketView: React.FC = () => {
   };
   
   return (
-    <div className="p-6 space-y-6">
+    <div className="p-6 space-y-6 animate-fade-in">
       <div className="panel">
-        <h1 className="font-medieval text-4xl text-gold mb-2">🏪 Black Market</h1>
-        <p className="font-body text-brown-700 mb-4">
+        <h1 className="font-medieval text-4xl text-gold mb-3">🏪 Black Market</h1>
+        <p className="font-body text-brown-700 mb-5">
           Trade tax-free goods and services • No questions asked
         </p>
         
         {/* Player Gold Display */}
-        <div className="bg-gold-light border-2 border-gold rounded p-3 mb-4">
+        <div className="bg-gold-light border-2 border-gold rounded p-4 mb-5 hover-lift">
           <div className="flex items-center justify-between">
             <span className="font-medieval text-xl text-brown">Your Gold:</span>
             <span className="font-medieval text-2xl text-gold">💰 {stats.gold}</span>
@@ -104,33 +104,33 @@ export const MarketView: React.FC = () => {
         </div>
         
         {/* Tab Navigation */}
-        <div className="flex gap-2 mb-4">
+        <div className="flex gap-2 mb-5">
           <button
             onClick={() => setActiveTab('shop')}
-            className={`flex-1 py-2 px-4 font-medieval rounded transition-colors ${
+            className={`flex-1 py-2.5 px-4 font-medieval rounded transition-all duration-300 ${
               activeTab === 'shop'
-                ? 'bg-emerald text-parchment'
-                : 'bg-parchment-200 text-brown hover:bg-parchment-300'
+                ? 'bg-emerald text-parchment shadow-md transform scale-105'
+                : 'bg-parchment-200 text-brown hover:bg-parchment-300 hover:shadow-md hover:-translate-y-0.5'
             }`}
           >
             🛒 Buy
           </button>
           <button
             onClick={() => setActiveTab('sell')}
-            className={`flex-1 py-2 px-4 font-medieval rounded transition-colors ${
+            className={`flex-1 py-2.5 px-4 font-medieval rounded transition-all duration-300 ${
               activeTab === 'sell'
-                ? 'bg-emerald text-parchment'
-                : 'bg-parchment-200 text-brown hover:bg-parchment-300'
+                ? 'bg-emerald text-parchment shadow-md transform scale-105'
+                : 'bg-parchment-200 text-brown hover:bg-parchment-300 hover:shadow-md hover:-translate-y-0.5'
             }`}
           >
             💵 Sell
           </button>
           <button
             onClick={() => setActiveTab('craft')}
-            className={`flex-1 py-2 px-4 font-medieval rounded transition-colors ${
+            className={`flex-1 py-2.5 px-4 font-medieval rounded transition-all duration-300 ${
               activeTab === 'craft'
-                ? 'bg-emerald text-parchment'
-                : 'bg-parchment-200 text-brown hover:bg-parchment-300'
+                ? 'bg-emerald text-parchment shadow-md transform scale-105'
+                : 'bg-parchment-200 text-brown hover:bg-parchment-300 hover:shadow-md hover:-translate-y-0.5'
             }`}
           >
             🔨 Craft (Coming Soon)
@@ -139,9 +139,9 @@ export const MarketView: React.FC = () => {
         
         {/* Shop Tab */}
         {activeTab === 'shop' && (
-          <div className="space-y-3">
-            <h2 className="font-medieval text-2xl text-brown mb-3">Available Items</h2>
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
+          <div className="space-y-4">
+            <h2 className="font-medieval text-2xl text-brown mb-4">Available Items</h2>
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               {shopItems.map((item) => {
                 const price = getItemPrice(item);
                 const canAfford = stats.gold >= price;
@@ -149,9 +149,9 @@ export const MarketView: React.FC = () => {
                 return (
                   <div
                     key={item.id}
-                    className={`p-4 rounded border-2 ${
+                    className={`p-4 rounded border-2 transition-all duration-300 ${
                       canAfford 
-                        ? 'bg-parchment-100 border-brown' 
+                        ? 'bg-parchment-100 border-brown card-interactive' 
                         : 'bg-gray-200 border-gray-400 opacity-70'
                     }`}
                   >
