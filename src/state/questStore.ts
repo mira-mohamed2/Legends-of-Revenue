@@ -37,9 +37,9 @@ export const useQuestStore = create<QuestState>((set, get) => ({
         
         return {
           ...quest,
-          stages: quest.stages.map(stage => ({
+          stages: quest.stages.map((stage) => ({
             ...stage,
-            objectives: stage.objectives.map(obj =>
+            objectives: stage.objectives.map((obj) =>
               obj.id === objectiveId
                 ? { ...obj, completed: true }
                 : obj

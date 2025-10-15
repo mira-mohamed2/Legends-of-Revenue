@@ -1,5 +1,5 @@
 import { create } from 'zustand';
-import type { MapTile, EncounterTable } from '../types/map';
+import type { MapTile } from '../types/map';
 import type { Enemy, EncounterState } from '../types/combat';
 import type { GameMode } from '../types/ui';
 import { saveToStorage, loadFromStorage } from '../utils/storage';
@@ -105,7 +105,7 @@ export const useWorldStore = create<WorldState>((set, get) => ({
     // Random roll
     if (Math.random() < tile.encounterRate) {
       // Select enemy from encounter table
-      const totalWeight = tile.encounterTable.reduce((sum, entry) => sum + entry.weight, 0);
+      const totalWeight = tile.encounterTable.reduce((sum: number, entry) => sum + entry.weight, 0);
       let roll = Math.random() * totalWeight;
       
       for (const entry of tile.encounterTable) {
@@ -130,7 +130,6 @@ export const useWorldStore = create<WorldState>((set, get) => ({
       enemy: { ...enemy, stats: { ...enemy.stats } }, // Clone
       playerTurn: true,
       turnCount: 0,
-      combatLog: [`You encountered a ${enemy.name}!`],
     };
     
     set({
