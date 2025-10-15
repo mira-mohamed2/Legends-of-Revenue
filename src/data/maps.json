@@ -139,15 +139,15 @@
   },
   {
     "id": "miras-palace",
-    "name": "Dragon's Lair",
+    "name": "Dragon's Lair - ARIM's Domain",
     "type": "dungeon",
-    "description": "The legendary home of Mira the Dragon, the most notorious tax evader in history. She hoards stolen wealth that belongs to the people.",
-    "neighbors": ["tax-collectors-office"],
-    "encounterRate": 0.9,
+    "description": "The legendary lair of ARIM the Dragon, the ultimate embodiment of tax evasion. Mountains of hoarded gold glitter in the darkness. Only the strongest MIRA agents dare enter this domain.",
+    "neighbors": ["tax-collectors-office", "underground-vault"],
+    "encounterRate": 1.0,
     "encounterTable": [
-      { "enemyId": "corrupted-guard", "weight": 5 },
-      { "enemyId": "tax-collector-minion", "weight": 5 }
+      { "enemyId": "arim-dragon", "weight": 10 }
     ],
-    "questHooks": []
+    "questHooks": [],
+    "isBossArea": true
   }
 ]

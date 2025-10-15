@@ -267,7 +267,7 @@ Transform Legends of Revenue into an **edutainment** game that teaches real tax 
   - Learn: Why keeping records matters
 
 **Chapter 6: Final Boss - Tax Reform**
-- **Boss**: "Mira the Dragon" (representing the system itself)
+- **Boss**: "Arim the Dragon" (representing the system itself)
 - **Lesson**: Tax policy, reform, and civic engagement
 - **Ending**: Player becomes advocate for fair taxation
 

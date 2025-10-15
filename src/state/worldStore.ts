@@ -3,6 +3,7 @@ import type { MapTile } from '../types/map';
 import type { Enemy, EncounterState } from '../types/combat';
 import type { GameMode } from '../types/ui';
 import { saveToStorage, loadFromStorage } from '../utils/storage';
+import { generateEnemyStats, calculateRewardMultiplier } from '../utils/enemyStats';
 import mapData from '../data/maps.json';
 import enemyData from '../data/enemies.json';
 
@@ -119,17 +120,35 @@ export const useWorldStore = create<WorldState>((set, get) => ({
   },
   
   startEncounter: (enemyId) => {
-    const enemy = (enemyData as Enemy[]).find(e => e.id === enemyId);
+    const enemyTemplate = (enemyData as any[]).find(e => e.id === enemyId);
     
-    if (!enemy) {
+    if (!enemyTemplate) {
       console.error(`Enemy ${enemyId} not found`);
       return;
     }
+
+    // Generate random stats from stat ranges
+    const stats = enemyTemplate.statRanges 
+      ? generateEnemyStats(enemyTemplate.statRanges)
+      : enemyTemplate.stats; // Fallback to fixed stats if no ranges defined
+
+    // Calculate reward multiplier based on generated stats
+    const rewardMultiplier = enemyTemplate.statRanges
+      ? calculateRewardMultiplier(stats, enemyTemplate.statRanges)
+      : 1.0;
+
+    // Create enemy with generated stats
+    const enemy: Enemy = {
+      ...enemyTemplate,
+      stats,
+      statRanges: enemyTemplate.statRanges, // Keep ranges for UI display
+    };
     
     const encounterState: EncounterState = {
-      enemy: { ...enemy, stats: { ...enemy.stats } }, // Clone
+      enemy,
       playerTurn: true,
       turnCount: 0,
+      rewardMultiplier,
     };
     
     set({

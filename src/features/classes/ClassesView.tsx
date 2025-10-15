@@ -40,8 +40,8 @@ export const ClassesView: React.FC = () => {
       stats: { hp: 70, attack: 15, defense: 4, critChance: 15 },
     },
     {
-      id: 'deduction-priest',
-      name: 'Deduction Priest',
+      id: 'healer',
+      name: 'Healer',
       icon: '✨',
       description: 'Support class with healing and buffs. Keeps the party alive through tax season.',
       abilities: [

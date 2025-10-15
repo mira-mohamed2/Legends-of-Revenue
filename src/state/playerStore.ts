@@ -12,6 +12,7 @@ interface PlayerState {
   inventory: InventorySlot[];
   location: string;
   enemiesKilled: number;
+  defeatedEnemyTypes: Set<string>; // Track which enemy types have been defeated at least once
   locationsVisited: Set<string>;
   avatar: string; // Avatar image path
   customAvatar: string | null; // Custom uploaded avatar URL
@@ -31,6 +32,7 @@ interface PlayerState {
   unequipItem: (slot: keyof PlayerEquipment) => void;
   setLocation: (tileId: string) => void;
   incrementEnemiesKilled: () => void;
+  recordEnemyDefeated: (enemyId: string) => void; // Track specific enemy type defeated
   checkAchievements: () => void;
   setAvatar: (avatarPath: string) => void;
   setCustomAvatar: (imageUrl: string | null) => void;
@@ -63,6 +65,7 @@ export const usePlayerStore = create<PlayerState>((set, get) => ({
   inventory: [],
   location: 'guild-hall',
   enemiesKilled: 0,
+  defeatedEnemyTypes: new Set<string>(),
   locationsVisited: new Set(['guild-hall']),
   avatar: '/images/avatars/rogue.svg', // Default avatar
   customAvatar: null,
@@ -331,6 +334,13 @@ export const usePlayerStore = create<PlayerState>((set, get) => ({
     get().savePlayer();
   },
   
+  recordEnemyDefeated: (enemyId: string) => {
+    set((state) => ({
+      defeatedEnemyTypes: new Set([...state.defeatedEnemyTypes, enemyId]),
+    }));
+    get().savePlayer();
+  },
+  
   checkAchievements: () => {
     const state = get();
     useAchievementStore.getState().checkAchievements(
@@ -369,7 +379,7 @@ export const usePlayerStore = create<PlayerState>((set, get) => ({
   },
   
   savePlayer: () => {
-    const { stats, equipment, inventory, location, enemiesKilled, locationsVisited, avatar, customAvatar } = get();
+    const { stats, equipment, inventory, location, enemiesKilled, defeatedEnemyTypes, locationsVisited, avatar, customAvatar } = get();
     const username = (window as any).__currentUsername; // Temporary solution
     
     if (!username) return;
@@ -388,6 +398,7 @@ export const usePlayerStore = create<PlayerState>((set, get) => ({
       inventory,
       location,
       enemiesKilled,
+      defeatedEnemyTypes: Array.from(defeatedEnemyTypes),
       locationsVisited: Array.from(locationsVisited),
       avatar,
       customAvatar,
@@ -401,6 +412,7 @@ export const usePlayerStore = create<PlayerState>((set, get) => ({
       inventory,
       location,
       enemiesKilled,
+      defeatedEnemyTypes: Array.from(defeatedEnemyTypes),
       locationsVisited: Array.from(locationsVisited), // Convert Set to Array for JSON
       avatar,
       customAvatar,
@@ -418,6 +430,7 @@ export const usePlayerStore = create<PlayerState>((set, get) => ({
         inventory: characterData.inventory,
         location: characterData.location,
         enemiesKilled: characterData.enemiesKilled || 0,
+        defeatedEnemyTypes: new Set(characterData.defeatedEnemyTypes || []),
         locationsVisited: new Set(characterData.locationsVisited || ['guild-hall']),
         avatar: characterData.avatar || '/images/avatars/rogue.svg',
         customAvatar: characterData.customAvatar || null,
@@ -442,6 +455,7 @@ export const usePlayerStore = create<PlayerState>((set, get) => ({
       inventory: InventorySlot[];
       location: string;
       enemiesKilled?: number;
+      defeatedEnemyTypes?: string[];
       locationsVisited?: string[];
       avatar?: string;
       customAvatar?: string | null;
@@ -457,6 +471,7 @@ export const usePlayerStore = create<PlayerState>((set, get) => ({
       inventory: data.inventory,
       location: data.location,
       enemiesKilled: data.enemiesKilled || 0,
+      defeatedEnemyTypes: new Set(data.defeatedEnemyTypes || []),
       locationsVisited: new Set(data.locationsVisited || ['guild-hall']),
       avatar: data.avatar || '/images/avatars/rogue.svg',
       customAvatar: data.customAvatar || null,
@@ -473,6 +488,7 @@ export const usePlayerStore = create<PlayerState>((set, get) => ({
       inventory: [],
       location: 'guild-hall',
       enemiesKilled: 0,
+      defeatedEnemyTypes: new Set<string>(),
       locationsVisited: new Set(['guild-hall']),
       avatar: '/images/avatars/rogue.svg',
       customAvatar: null,

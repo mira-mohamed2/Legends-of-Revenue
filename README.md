@@ -72,7 +72,7 @@ npm run preview
 - 🌑 **Black Market Alley** - Shady dealings and illegal trades
 - 🛂 **Border Checkpoint** - Catch smugglers
 - 🏝️ **Offshore Haven** - Face the most corrupt criminals
-- 🐉 **Dragon's Lair** - Final boss: Mira the Dragon
+- 🐉 **Dragon's Lair** - Final boss: Arim the Dragon
 
 ### Enemies
 - 🐀 **Tax Dodger Rat** - Vermin hoarding coins (Level 1)

@@ -36,7 +36,7 @@ Renamed all locations to fit MIRA perspective:
 | Black Market | **Illegal Trading Post** | Clandestine untaxed bazaar |
 | Abandoned Treasury | **Abandoned Warehouse** | Former business, now evasion front |
 | Tax Evasion Hideout | **Offshore Haven** | Where wealthy coordinate tax crimes |
-| MIRA's Palace | **Dragon's Lair** | Home of Mira the Dragon (biggest tax evader) |
+| MIRA's Palace | **Dragon's Lair** | Home of Arim the Dragon (biggest tax evader) |
 
 **Description Updates:**
 - All location descriptions now frame MIRA as investigators/enforcers
@@ -106,7 +106,7 @@ Created comprehensive lore document explaining:
 - Your role as an elite Revenue Agent
 - Detailed enemy profiles from MIRA perspective
 - Location descriptions and their significance
-- The ultimate boss: **Mira the Dragon** (ironic namesake)
+- The ultimate boss: **Arim the Dragon** (ironic namesake)
 - Narrative philosophy: taxation = justice, evasion = crime
 
 ---
@@ -124,7 +124,7 @@ Created comprehensive lore document explaining:
 | **Tone** | Rebellious, anti-authority | Heroic, professional, righteous |
 
 ### Key Irony Preserved
-- **Mira the Dragon** (final boss) is the ultimate tax evader
+- **Arim the Dragon** (final boss) is the ultimate tax evader
 - The organization **MIRA** fights against what the dragon represents
 - You work for an authority named after the biggest criminal
 
@@ -174,7 +174,7 @@ Created comprehensive lore document explaining:
 - [ ] Update crafting recipe flavors (crafting.json) to MIRA theme
 - [ ] Create MIRA-themed avatar options (current avatars are generic)
 - [ ] Add MIRA badge/logo visual elements
-- [ ] Implement Mira the Dragon boss fight with appropriate dialogue
+- [ ] Implement Arim the Dragon boss fight with appropriate dialogue
 - [ ] Add more MIRA-specific quests and storylines
 
 ---

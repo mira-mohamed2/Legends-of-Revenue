@@ -130,5 +130,23 @@
     "rarity": "common",
     "value": 0,
     "description": "Proof of payment to the ever-hungry coffers of Grafton. Keep it safe."
+  },
+  {
+    "id": "legendary-sword",
+    "name": "MIRA's Justice - Legendary Blade",
+    "category": "weapon",
+    "rarity": "legendary",
+    "stats": { "attack": 12, "critChance": 0.25 },
+    "value": 500,
+    "description": "Forged from the taxes collected over a thousand years. Its blade burns with the fire of justice. Grants +12 Attack and 25% critical hit chance. Only the most dedicated MIRA agents can wield this legendary weapon."
+  },
+  {
+    "id": "dragon-scale-armor",
+    "name": "Dragon Scale Armor",
+    "category": "armor",
+    "rarity": "legendary",
+    "stats": { "defense": 10 },
+    "value": 600,
+    "description": "Crafted from the impervious scales of ARIM itself. No tax evader's attack can pierce this legendary armor. Grants +10 Defense - the ultimate protection for MIRA's finest."
   }
 ]

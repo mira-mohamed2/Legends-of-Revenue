@@ -3,11 +3,10 @@
     "id": "coin-rat",
     "name": "Tax Dodger Rat",
     "image": "/images/enemies/tax-collector.svg",
-    "stats": {
-      "hp": 15,
-      "maxHp": 15,
-      "attack": 4,
-      "defense": 1
+    "statRanges": {
+      "hp": { "min": 12, "max": 18 },
+      "attack": { "min": 3, "max": 5 },
+      "defense": { "min": 0, "max": 2 }
     },
     "rewards": {
       "xp": 15,
@@ -18,17 +17,17 @@
       ]
     },
     "description": "A mangy rodent hoarding stolen coins. Even vermin try to evade MIRA's justice.",
+    "lore": "These vermin infest the dark corners of the Maldives, drawn to the scent of unpaid taxes and hidden wealth. They scatter coins across their nests, symbolizing the countless small-time evaders who think they're too insignificant for MIRA to notice. They're wrong.",
     "abilities": []
   },
   {
     "id": "tax-collector-minion",
     "name": "Petty Tax Evader",
     "image": "/images/enemies/tax-collector.svg",
-    "stats": {
-      "hp": 25,
-      "maxHp": 25,
-      "attack": 6,
-      "defense": 3
+    "statRanges": {
+      "hp": { "min": 20, "max": 30 },
+      "attack": { "min": 5, "max": 8 },
+      "defense": { "min": 2, "max": 4 }
     },
     "rewards": {
       "xp": 30,
@@ -41,6 +40,7 @@
       ]
     },
     "description": "A small-time crook who hasn't filed taxes in years. Fights desperately to keep their ill-gotten gains.",
+    "lore": "Former shopkeepers, street vendors, and small business owners who thought they could outsmart the system. Years of unpaid taxes have made them paranoid and desperate. When cornered by MIRA agents, they fight with the ferocity of those who know prison awaits them.",
     "abilities": [
       {
         "id": "demand-payment",
@@ -54,11 +54,10 @@
     "id": "bandit-thief",
     "name": "Offshore Accountant",
     "image": "/images/enemies/audit-phantom.svg",
-    "stats": {
-      "hp": 20,
-      "maxHp": 20,
-      "attack": 7,
-      "defense": 2
+    "statRanges": {
+      "hp": { "min": 16, "max": 24 },
+      "attack": { "min": 6, "max": 9 },
+      "defense": { "min": 1, "max": 3 }
     },
     "rewards": {
       "xp": 25,
@@ -73,17 +72,17 @@
       ]
     },
     "description": "A shady financial advisor who helps the wealthy hide their money. Slippery as an eel.",
+    "lore": "Masters of shell companies and numbered accounts, these financial criminals operate from tropical havens, moving money through labyrinthine networks. They speak in codes, destroy evidence, and always have an escape route planned. Their calculators are mightier than swords—until MIRA comes knocking.",
     "abilities": []
   },
   {
     "id": "corrupted-guard",
     "name": "Corrupted Businessman",
     "image": "/images/enemies/revenue-enforcer.svg",
-    "stats": {
-      "hp": 35,
-      "maxHp": 35,
-      "attack": 8,
-      "defense": 5
+    "statRanges": {
+      "hp": { "min": 30, "max": 40 },
+      "attack": { "min": 7, "max": 10 },
+      "defense": { "min": 4, "max": 6 }
     },
     "rewards": {
       "xp": 50,
@@ -99,12 +98,56 @@
       ]
     },
     "description": "A wealthy merchant who bribes officials and falsifies records. Their suit is expensive, but their morals are cheap.",
+    "lore": "Draped in designer suits and luxury watches bought with untaxed millions, these titans of tax fraud have corrupted officials, falsified records, and hidden empires. They believe themselves untouchable, protected by layers of lawyers and influence. But no amount of money can shield them from MIRA's relentless pursuit of justice.",
     "abilities": [
       {
         "id": "shield-wall",
         "name": "Shield Wall",
         "trigger": "combat-start",
         "effect": { "type": "defense-boost", "value": 3 }
+      }
+    ]
+  },
+  {
+    "id": "arim-dragon",
+    "name": "ARIM - The Tax Evasion Dragon",
+    "image": "/images/enemies/arim-dragon.svg",
+    "statRanges": {
+      "hp": { "min": 100, "max": 150 },
+      "attack": { "min": 15, "max": 25 },
+      "defense": { "min": 8, "max": 12 }
+    },
+    "rewards": {
+      "xp": 500,
+      "gold": 1000,
+      "items": [
+        { "id": "legendary-sword", "chance": 0.50 },
+        { "id": "dragon-scale-armor", "chance": 0.40 },
+        { "id": "mega-health-potion", "chance": 1.0 },
+        { "id": "greater-health-potion", "chance": 1.0 },
+        { "id": "gold-coins", "chance": 1.0 }
+      ]
+    },
+    "description": "The embodiment of all tax evasion - ARIM, the ancient dragon whose very name is MIRA spelled backwards. The ultimate enemy of economic justice.",
+    "lore": "In ancient times, before MIRA brought order to the Maldives, a great dragon named ARIM terrorized the islands. Its name, a dark reflection of MIRA itself, represents the antithesis of taxation and civic duty. ARIM hoarded mountains of gold, never contributing a single coin to society. It corrupted officials, destroyed records, and breathed fire upon any who dared audit its treasures. Legends say it still lurks in the deepest tax havens, waiting to face the ultimate MIRA agent. Only the bravest and most skilled can hope to defeat this legendary beast and restore balance to the revenue cycle.",
+    "abilities": [
+      {
+        "id": "dragon-breath",
+        "name": "Tax Evasion Flames",
+        "trigger": "hp-below-75",
+        "effect": { "type": "damage-boost", "value": 5 }
+      },
+      {
+        "id": "scale-armor",
+        "name": "Dragon Scale Defense",
+        "trigger": "combat-start",
+        "effect": { "type": "defense-boost", "value": 5 }
+      },
+      {
+        "id": "gold-hoard-fury",
+        "name": "Gold Hoard Fury",
+        "trigger": "hp-below-30",
+        "effect": { "type": "damage-boost", "value": 10 }
       }
     ]
   }

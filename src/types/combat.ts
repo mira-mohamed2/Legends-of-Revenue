@@ -5,6 +5,17 @@ export interface EnemyStats {
   defense: number;
 }
 
+export interface StatRange {
+  min: number;
+  max: number;
+}
+
+export interface EnemyStatRanges {
+  hp: StatRange;
+  attack: StatRange;
+  defense: StatRange;
+}
+
 export interface EnemyRewardItem {
   id: string;
   chance?: number;
@@ -31,6 +42,7 @@ export interface Enemy {
   name: string;
   image?: string;
   stats: EnemyStats;
+  statRanges?: EnemyStatRanges; // For displaying possible stat ranges
   rewards: EnemyRewards;
   description?: string;
   abilities?: EnemyAbility[];
@@ -40,4 +52,5 @@ export interface EncounterState {
   enemy: Enemy;
   turnCount: number;
   playerTurn?: boolean;
+  rewardMultiplier?: number; // Based on enemy's randomized strength
 }

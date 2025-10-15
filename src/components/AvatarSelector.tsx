@@ -10,7 +10,7 @@ export const AvatarSelector: React.FC = () => {
     { id: 'rogue', name: 'Rogue', path: '/images/avatars/rogue.svg' },
     { id: 'warrior', name: 'Warrior', path: '/images/avatars/warrior.svg' },
     { id: 'mage', name: 'Mage', path: '/images/avatars/mage.svg' },
-    { id: 'priest', name: 'Priest', path: '/images/avatars/priest.svg' },
+    { id: 'healer', name: 'Healer', path: '/images/avatars/healer.svg' },
   ];
   
   const currentAvatar = customAvatar || avatar;

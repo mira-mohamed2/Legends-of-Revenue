@@ -2,6 +2,7 @@ import { useEffect, useState } from 'react';
 import { useSessionStore } from './state/sessionStore';
 import { useWorldStore } from './state/worldStore';
 import { AuthView } from './features/auth/AuthView';
+import { HomeView } from './features/home/HomeView';
 import { MapView } from './features/map/MapView';
 import { CombatView } from './features/combat/CombatView';
 import { CharacterView } from './features/character/CharacterView';
@@ -14,7 +15,7 @@ import { MenuBar, type MenuOption } from './components/MenuBar';
 function App() {
   const { isAuthenticated, loadSession } = useSessionStore();
   const { gameMode } = useWorldStore();
-  const [activeView, setActiveView] = useState<MenuOption>('map');
+  const [activeView, setActiveView] = useState<MenuOption>('home');
   
   // Load session on mount
   useEffect(() => {
@@ -33,6 +34,8 @@ function App() {
     }
     
     switch (activeView) {
+      case 'home':
+        return <HomeView />;
       case 'map':
         return <MapView />;
       case 'character':
@@ -49,14 +52,16 @@ function App() {
   };
   
   return (
-    <div className="min-h-screen bg-gradient-to-br from-emerald-50 via-teal-50 to-cyan-50">
+    <div className="min-h-screen bg-gradient-to-br from-emerald-50 via-teal-50 to-cyan-50 flex flex-col">
       {/* Menu Bar - Sticky */}
       <MenuBar activeView={activeView} onNavigate={setActiveView} />
       
-      {/* Main Content - Add padding to prevent overlap */}
-      <div className="container mx-auto pt-4 pb-8">
-        {renderView()}
-      </div>
+      {/* Main Content - Responsive padding and safe scrolling */}
+      <main className="flex-1 w-full overflow-x-hidden">
+        <div className="container mx-auto px-2 sm:px-4 md:px-6 py-3 sm:py-4 md:py-6">
+          {renderView()}
+        </div>
+      </main>
       
       {/* Achievement Notifications */}
       <AchievementNotification />

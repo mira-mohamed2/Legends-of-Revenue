@@ -1,89 +1,149 @@
-# 🏰 Game Lore Documentation
+# 🏰 Legends of Revenue - Complete Game Lore
 
-> Complete narrative and world-building for Legends of Revenue
-
-## 📖 Lore Documents
-
-| Document | Description | Status |
-|----------|-------------|--------|
-| [Game Story](story.md) | Complete narrative: MIRA vs Tax Evaders | ✅ Complete |
-| [Lore Changelog](changelog.md) | History of narrative changes | ✅ Complete |
+> *"In a world where shadows hide billions, one agency stands between order and economic chaos."*
 
 ---
 
-## 🎭 The Story
+## 📖 The Legend Begins
 
 ### Overview
 
-In **Legends of Revenue**, you play as a heroic agent of **MIRA** (Maldives Inland Revenue Authority), fighting to bring tax evaders to justice. This is not a story of rebellion - this is a story of justice, order, and protecting the revenue that serves the people.
+In **Legends of Revenue**, you are not a rebel or a rogue. You are **justice incarnate**—a heroic agent of **MIRA** (Maldives Inland Revenue Authority), the last bastion of economic order in a world drowning in tax evasion and financial fraud.
 
-### The World
-
-The Maldives has fallen into economic chaos. Tax evaders run rampant, hiding in:
-- 🏢 Business districts with shady accountants
-- 🌑 Black market alleys where illegal trades flourish
-- 🛂 Border checkpoints with smuggling operations
-- 🏝️ Offshore havens protecting corrupt businessmen
-
-### Your Role
-
-You are a **MIRA Agent** - an enforcement officer dedicated to:
-- Apprehending tax evaders
-- Recovering hidden assets
-- Dismantling offshore schemes
-- Protecting national revenue
-
-### The Journey
-
-From humble beginnings at **MIRA Headquarters**, you'll:
-1. Complete training missions
-2. Hunt down petty evaders
-3. Face corrupt businessmen
-4. Challenge offshore accountants
-5. Confront the ultimate threat: **Mira the Dragon**
+This is a story of courage, duty, and the eternal struggle between those who serve the public good and those who serve only greed.
 
 ---
 
-## 🐉 Major Characters
+## � The World of MIRA
 
-### Heroes
+### The Maldives: Paradise Lost
 
-**MIRA Director** (Quest Giver)
-- Location: MIRA Headquarters
-- Role: Your commanding officer
-- Provides missions and guidance
+Once a beacon of tropical prosperity, the Maldives has fallen into economic shadow. Corruption festers in high places. Offshore havens shelter billions in stolen wealth. The very foundations of society crumble as tax revenue—the lifeblood of civilization—hemorrhages into criminal coffers.
 
-**You** (The Player)
-- Title: MIRA Agent
-- Goal: Bring all tax evaders to justice
-- Progression: Agent → Senior Agent → Revenue Master
+#### The Fallen Territories
 
-### Villains
+**🏢 The Business District**
+- *Status:* Compromised
+- *Threat Level:* Moderate
+- *Description:* Once-legitimate enterprises now falsify records, hide revenues, and bribe inspectors. Behind every office door lurks a petty tax evader, desperate to protect their ill-gotten gains.
 
-**Tax Dodger Rats** 🐀
-- Level: 1
-- Location: Everywhere
-- Description: Vermin hoarding coins in the shadows
+**🌑 The Black Market**
+- *Status:* Active Criminal Hub
+- *Threat Level:* High
+- *Description:* In the shadowed alleys where law fears to tread, forbidden trades flourish. Cash changes hands without receipts, goods move without manifests, and every transaction mocks the very concept of taxation.
 
-**Petty Tax Evaders** 🏃
-- Level: 2-3
-- Location: Business District, Border Checkpoint
-- Description: Small-time criminals avoiding their obligations
+**🛂 Border Checkpoints**
+- *Status:* Infiltrated
+- *Threat Level:* Critical
+- *Description:* Where the nation should be protected, smugglers now reign. Contraband flows like water, and those sworn to guard the borders have become gatekeepers of corruption.
 
-**Offshore Accountants** 💼
-- Level: 4-5
-- Location: Offshore Haven, Shell Company HQ
-- Description: Shady financial advisors helping the wealthy evade
+**🏝️ Offshore Havens**
+- *Status:* Tax Evasion Fortress
+- *Threat Level:* Extreme
+- *Description:* Tropical islands transformed into financial bunkers. Shell companies nest like parasites, numbered accounts hide fortunes, and shady accountants weave webs of legal deception so complex that justice itself becomes lost.
 
-**Corrupted Businessmen** 🤵
-- Level: 6-8
-- Location: Hidden Vault, Offshore Haven
-- Description: Wealthy fraudsters with complex schemes
+**🏰 Shell Company Headquarters**
+- *Status:* Enemy Stronghold
+- *Threat Level:* Elite
+- *Description:* The beating heart of corporate tax fraud. Here, corrupted businessmen command empires built on lies, protected by armies of lawyers and walls of paperwork.
 
-**Mira the Dragon** 🐉
-- Level: 10 (Boss)
-- Location: Dragon's Lair
-- Description: The ultimate personification of tax evasion itself
+**🐉 The Dragon's Lair**
+- *Status:* Final Boss Arena
+- *Threat Level:* LEGENDARY
+- *Description:* At the pinnacle of corruption sits **Arim the Dragon**—the physical manifestation of tax evasion itself. Ancient, cunning, and hoarding mountains of untaxed wealth, this beast represents the ultimate challenge for any MIRA agent.
+
+---
+
+## 🦸 Your Role: Agent of Justice
+
+### The Calling
+
+You are a **MIRA Agent**—not merely an employee, but a **warrior** in the eternal battle for economic justice. You have taken an oath:
+
+*"I swear to uphold the revenue laws of the Maldives, to pursue evaders with relentless determination, to recover every hidden coin, and to protect the public treasury from those who would rob the people of their future."*
+
+### Your Mission
+
+- ⚔️ **Apprehend Tax Evaders:** Hunt down those who refuse to pay their fair share
+- 💰 **Recover Hidden Assets:** Seize ill-gotten gains and return them to the public coffers
+- 🏛️ **Dismantle Criminal Networks:** Destroy offshore schemes and shell company empires
+- 🛡️ **Protect National Revenue:** Stand as the final guardian of economic order
+
+### Your Journey
+
+From **MIRA Headquarters**, you will embark on a path of escalating challenge:
+
+1. **Tax Officer Trainee** - Learn the basics, face Tax Dodger Rats
+2. **Tax Officer** - Hunt Petty Tax Evaders in the streets
+3. **Senior Tax Officer** - Confront Offshore Accountants in their tropical hideouts
+4. **Elite Enforcer** - Battle Corrupted Businessmen in their corporate fortresses  
+5. **Revenue Master** - Face the ultimate evil: **Arim the Dragon**
+
+---
+
+## � Characters of Legend
+
+### Allies
+
+**🏛️ MIRA Director**
+- **Title:** Director of Enforcement
+- **Location:** MIRA Headquarters
+- **Role:** Your commanding officer and quest giver
+- **Personality:** Stern but fair, unwavering in pursuit of justice
+- **Quote:** *"Every coin they hide is a hospital bed unfunded, a school unmaintained, a future stolen. Go forth and reclaim what belongs to the people."*
+
+**🎓 Training Officer**
+- **Title:** Chief Instructor
+- **Location:** MIRA Training Grounds
+- **Role:** Teaches combat and investigation techniques
+- **Personality:** Gruff veteran with a soft heart for rookies
+- **Quote:** *"Tax evaders think they're clever. Prove them wrong."*
+
+---
+
+### Enemies
+
+**🐀 Tax Dodger Rats**
+- **Threat Level:** ⭐ Trivial
+- **Locations:** Everywhere (urban vermin)
+- **Combat Style:** Quick, cowardly strikes
+- **Lore:** *These vermin infest the dark corners of the Maldives, drawn to the scent of unpaid taxes and hidden wealth. They scatter coins across their nests, symbolizing the countless small-time evaders who think they're too insignificant for MIRA to notice. They're wrong.*
+- **Quote:** *"Squeak! My precious coins!"*
+
+**🏃 Petty Tax Evaders**
+- **Threat Level:** ⭐⭐ Minor
+- **Locations:** Business District, Border Checkpoints
+- **Combat Style:** Desperate and erratic
+- **Lore:** *Former shopkeepers, street vendors, and small business owners who thought they could outsmart the system. Years of unpaid taxes have made them paranoid and desperate. When cornered by MIRA agents, they fight with the ferocity of those who know prison awaits them.*
+- **Quote:** *"You'll never take me alive! I earned this money!"*
+- **Special Ability:** *Desperate Evasion* - Becomes more dangerous when wounded
+
+**💼 Offshore Accountants**
+- **Threat Level:** ⭐⭐⭐ Moderate
+- **Locations:** Offshore Haven, Shell Company HQ
+- **Combat Style:** Calculated and elusive
+- **Lore:** *Masters of shell companies and numbered accounts, these financial criminals operate from tropical havens, moving money through labyrinthine networks. They speak in codes, destroy evidence, and always have an escape route planned. Their calculators are mightier than swords—until MIRA comes knocking.*
+- **Quote:** *"You have no jurisdiction here! My lawyers will—"*
+- **Specialty:** Creates complex financial traps and diversions
+
+**🤵 Corrupted Businessmen**
+- **Threat Level:** ⭐⭐⭐⭐ Dangerous
+- **Locations:** Hidden Vault, Shell Company HQ, Offshore Haven
+- **Combat Style:** Well-defended and ruthless
+- **Lore:** *Draped in designer suits and luxury watches bought with untaxed millions, these titans of tax fraud have corrupted officials, falsified records, and hidden empires. They believe themselves untouchable, protected by layers of lawyers and influence. But no amount of money can shield them from MIRA's relentless pursuit of justice.*
+- **Quote:** *"Do you know who I am? I own half this country!"*
+- **Special Ability:** *Shield Wall* - Enhanced defenses from legal protections
+
+**🐉 Arim the Dragon**
+- **Threat Level:** ⭐⭐⭐⭐⭐ LEGENDARY
+- **Location:** Dragon's Lair (Final Boss Arena)
+- **Combat Style:** Devastating, ancient, unstoppable
+- **Lore:** *In the deepest vault, atop mountains of hoarded gold, dwells Arim the Dragon—the ancient embodiment of greed itself. For millennia, this beast has slumbered on stolen wealth, growing fat on unpaid taxes. It is said that every coin the dragon touches becomes tainted with the curse of evasion. To defeat Arim is to break the very curse of tax fraud that plagues the Maldives.*
+- **Quote:** *"FOOLISH MORTAL! THIS GOLD IS MINE! TAXATION IS THEFT!"*
+- **Special Abilities:** 
+  - *Gold Flame Breath* - Incinerates those who dare challenge its hoard
+  - *Tax Shield* - Layers of legal loopholes provide supernatural defense
+  - *Greed's Curse* - Weakens opponents' resolve with visions of wealth
 
 ---
 
@@ -126,7 +186,7 @@ From humble beginnings at **MIRA Headquarters**, you'll:
 
 **Dragon's Lair** 🐉
 - Danger: Maximum
-- Enemies: Mira the Dragon (Boss)
+- Enemies: Arim the Dragon (Boss)
 - Description: The source of all tax evasion
 
 ---

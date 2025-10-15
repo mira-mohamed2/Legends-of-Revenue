@@ -62,23 +62,23 @@ export const CharacterView: React.FC = () => {
   };
   
   return (
-    <div className="panel p-4 animate-fade-in">
+    <div className="panel animate-fade-in max-w-6xl mx-auto">
       {/* Header with Avatar */}
-      <div className="flex items-center justify-between mb-4">
-        <h2 className="font-medieval text-2xl text-gold">Character</h2>
+      <div className="flex items-center justify-between mb-3 sm:mb-4">
+        <h2 className="font-medieval text-xl sm:text-2xl text-gold">Character</h2>
         <AvatarSelector />
       </div>
       
       {/* Compact 2-Column Layout */}
-      <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 mb-4">
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-3 sm:gap-4 mb-3 sm:mb-4">
         
         {/* Left Column: Stats & Equipment */}
-        <div className="space-y-4">
+        <div className="space-y-3 sm:space-y-4">
           
           {/* Stats - Compact */}
-          <div className="bg-parchment-200 p-3 rounded border border-brown-600 hover-lift">
-            <h3 className="font-medieval text-base text-emerald-800 mb-2 border-b border-brown-400 pb-1">📊 Stats</h3>
-            <div className="grid grid-cols-2 gap-x-4 gap-y-2 font-body text-sm text-brown-800">
+          <div className="bg-parchment-200 p-2 sm:p-3 rounded border border-brown-600 hover-lift">
+            <h3 className="font-medieval text-sm sm:text-base text-emerald-800 mb-2 border-b border-brown-400 pb-1">📊 Stats</h3>
+            <div className="grid grid-cols-2 gap-x-3 sm:gap-x-4 gap-y-2 font-body text-xs sm:text-sm text-brown-800">
               <div className="flex justify-between">
                 <span>Level:</span>
                 <span className="font-bold">

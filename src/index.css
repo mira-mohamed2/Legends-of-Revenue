@@ -1,29 +1,82 @@
-@import url('https://fonts.googleapis.com/css2?family=Uncial+Antiqua&family=Crimson+Text:wght@400;600;700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Cinzel:wght@400;500;600;700&family=EB+Garamond:wght@400;500;600;700&display=swap');
 
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
 
 @layer base {
+  html {
+    @apply scroll-smooth;
+    /* Prevent horizontal scrolling */
+    overflow-x: hidden;
+    width: 100%;
+  }
+  
   body {
     @apply font-body bg-gradient-to-br from-teal-50 via-cyan-50 to-teal-100 text-gray-800;
     margin: 0;
     min-height: 100vh;
+    min-height: -webkit-fill-available; /* iOS viewport fix */
     overflow-x: hidden;
+    width: 100%;
+    /* Safe area insets for notched phones */
+    padding: env(safe-area-inset-top) env(safe-area-inset-right) env(safe-area-inset-bottom) env(safe-area-inset-left);
   }
 
   h1, h2, h3, h4, h5, h6 {
     @apply font-medieval;
   }
   
+  /* Smooth transitions */
   * {
     transition: background-color 0.2s ease, border-color 0.2s ease, color 0.2s ease;
+  }
+  
+  /* Better tap targets for mobile */
+  button, a, input, select, textarea {
+    -webkit-tap-highlight-color: rgba(20, 184, 166, 0.2);
+    min-height: 44px; /* iOS accessibility standard */
+  }
+  
+  /* Prevent zoom on input focus (iOS) */
+  input, select, textarea {
+    font-size: 16px !important;
+  }
+  
+  /* Custom scrollbar for webkit browsers */
+  ::-webkit-scrollbar {
+    width: 8px;
+    height: 8px;
+  }
+  
+  ::-webkit-scrollbar-track {
+    @apply bg-teal-100;
+  }
+  
+  ::-webkit-scrollbar-thumb {
+    @apply bg-teal-500 rounded-lg;
+  }
+  
+  ::-webkit-scrollbar-thumb:hover {
+    @apply bg-teal-600;
+  }
+}
+
+@layer utilities {
+  /* Hide scrollbar but keep functionality */
+  .scrollbar-hide {
+    -ms-overflow-style: none;  /* IE and Edge */
+    scrollbar-width: none;  /* Firefox */
+  }
+  
+  .scrollbar-hide::-webkit-scrollbar {
+    display: none;  /* Chrome, Safari and Opera */
   }
 }
 
 @layer components {
   .panel {
-    @apply bg-gradient-to-br from-amber-50 to-orange-50 border-2 border-amber-600 rounded-xl shadow-lg p-4;
+    @apply bg-gradient-to-br from-amber-50 to-orange-50 border-2 border-amber-600 rounded-xl shadow-lg p-3 sm:p-4 md:p-6;
     transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
   }
   
@@ -37,6 +90,7 @@
     transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
     position: relative;
     overflow: hidden;
+    min-height: 44px; /* Touch-friendly */
   }
   
   .btn-primary:hover {
@@ -237,4 +291,196 @@ textarea:focus-visible {
     transition-duration: 0.01ms !important;
     scroll-behavior: auto !important;
   }
+}
+
+/* ===== COMBAT ANIMATIONS ===== */
+
+/* Attack Animation - Player lunges forward */
+@keyframes attackPlayer {
+  0% {
+    transform: translateX(0) scale(1);
+  }
+  30% {
+    transform: translateX(-15px) scale(1.05);
+  }
+  50% {
+    transform: translateX(-20px) scale(1.1);
+  }
+  100% {
+    transform: translateX(0) scale(1);
+  }
+}
+
+.animate-attack-player {
+  animation: attackPlayer 0.6s ease-out;
+}
+
+/* Attack Animation - Enemy lunges forward */
+@keyframes attackEnemy {
+  0% {
+    transform: translateX(0) scale(1);
+  }
+  30% {
+    transform: translateX(15px) scale(1.05);
+  }
+  50% {
+    transform: translateX(20px) scale(1.1);
+  }
+  100% {
+    transform: translateX(0) scale(1);
+  }
+}
+
+.animate-attack-enemy {
+  animation: attackEnemy 0.6s ease-out;
+}
+
+/* Hit/Damage Shake Animation */
+@keyframes hitShake {
+  0%, 100% {
+    transform: translateX(0);
+  }
+  10%, 30%, 50%, 70%, 90% {
+    transform: translateX(-5px);
+  }
+  20%, 40%, 60%, 80% {
+    transform: translateX(5px);
+  }
+}
+
+.animate-hit-shake {
+  animation: hitShake 0.5s ease-in-out;
+  filter: brightness(1.3) saturate(1.5);
+}
+
+/* Damage Number Float Animation */
+@keyframes damageFloat {
+  0% {
+    transform: translate(0, 0) scale(0.5);
+    opacity: 0;
+  }
+  10% {
+    transform: translate(0, -5px) scale(1.2);
+    opacity: 1;
+  }
+  50% {
+    transform: translate(0, -40px) scale(1);
+    opacity: 1;
+  }
+  100% {
+    transform: translate(0, -80px) scale(0.8);
+    opacity: 0;
+  }
+}
+
+.animate-damage-float {
+  animation: damageFloat 1s ease-out forwards;
+}
+
+/* Critical Hit Flash */
+@keyframes critFlash {
+  0%, 100% {
+    filter: brightness(1);
+  }
+  50% {
+    filter: brightness(2) saturate(2) drop-shadow(0 0 20px rgba(251, 191, 36, 0.8));
+  }
+}
+
+.animate-crit-flash {
+  animation: critFlash 0.4s ease-in-out;
+}
+
+/* Victory Celebration */
+@keyframes victory {
+  0%, 100% {
+    transform: scale(1) rotate(0deg);
+  }
+  25% {
+    transform: scale(1.1) rotate(-5deg);
+  }
+  75% {
+    transform: scale(1.1) rotate(5deg);
+  }
+}
+
+.animate-victory {
+  animation: victory 0.6s ease-in-out infinite;
+}
+
+/* Sword Clash Animations */
+@keyframes swordClash {
+  0% {
+    opacity: 0;
+    transform: scale(0.5);
+  }
+  50% {
+    opacity: 1;
+    transform: scale(1.2);
+  }
+  100% {
+    opacity: 0;
+    transform: scale(1);
+  }
+}
+
+@keyframes swordLeft {
+  0% {
+    transform: translateX(-100px) rotate(-45deg) scale(0.5);
+    opacity: 0;
+  }
+  50% {
+    transform: translateX(-20px) rotate(-45deg) scale(1.1);
+    opacity: 1;
+  }
+  100% {
+    transform: translateX(-30px) rotate(-45deg) scale(1);
+    opacity: 0;
+  }
+}
+
+@keyframes swordRight {
+  0% {
+    transform: translateX(100px) rotate(45deg) scale(0.5);
+    opacity: 0;
+  }
+  50% {
+    transform: translateX(20px) rotate(45deg) scale(1.1);
+    opacity: 1;
+  }
+  100% {
+    transform: translateX(30px) rotate(45deg) scale(1);
+    opacity: 0;
+  }
+}
+
+@keyframes clashSpark {
+  0% {
+    transform: translate(-50%, -50%) scale(0);
+    opacity: 0;
+  }
+  30% {
+    transform: translate(-50%, -50%) scale(1.5);
+    opacity: 1;
+  }
+  100% {
+    transform: translate(-50%, -50%) scale(2.5);
+    opacity: 0;
+  }
+}
+
+.animate-sword-clash {
+  animation: swordClash 0.4s ease-out;
+}
+
+.animate-sword-left {
+  animation: swordLeft 0.4s ease-out;
+}
+
+.animate-sword-right {
+  animation: swordRight 0.4s ease-out;
+}
+
+.animate-clash-spark {
+  animation: clashSpark 0.4s ease-out;
 }

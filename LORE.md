@@ -27,7 +27,7 @@ Shady financial advisors who help wealthy clients hide money in offshore account
 #### Corrupted Businessmen
 Wealthy merchants who bribe officials, falsify records, and run elaborate tax evasion schemes. They wear expensive suits but have cheap morals. These are the most dangerous criminals you'll face.
 
-#### Mira the Dragon (Final Boss - Not yet implemented)
+#### Arim the Dragon (Final Boss - Not yet implemented)
 The legendary tax evader who inspired the name of your organization ironically. She hoards stolen wealth in her lair - money that rightfully belongs to the people of the Maldives. Defeating her would be the ultimate achievement for any Revenue Agent.
 
 ### Locations
@@ -46,7 +46,7 @@ The legendary tax evader who inspired the name of your organization ironically. 
 - **Illegal Trading Post** - Clandestine bazaar for untaxed transactions
 - **Abandoned Warehouse** - Former legitimate business, now an evasion front
 - **Offshore Haven** - Where the wealthy coordinate their tax crimes
-- **Dragon's Lair** - Legendary home of Mira the Dragon (final dungeon)
+- **Dragon's Lair** - Legendary home of Arim the Dragon (final dungeon)
 
 ### Your Mission
 As a MIRA Revenue Agent, your objectives are:
@@ -71,14 +71,14 @@ As a MIRA agent, you fight for:
 - **Order** - Rule of law over chaos and greed
 
 ### Progression
-- Start as a rookie agent at MIRA Headquarters
+- Start as a Tax Officer Trainee at MIRA Headquarters
 - Investigate low-level tax dodgers in the Business District
-- Progress to more dangerous areas with sophisticated evaders
-- Recover valuable assets and level up your skills
-- Eventually face the ultimate challenge: Mira the Dragon herself
+- Progress to Tax Officer and then Senior Tax Officer roles
+- Advance to Elite Enforcer and eventually Revenue Master
+- Eventually face the ultimate challenge: Arim the Dragon herself
 
 ### The Irony
-The greatest tax evader in history, **Mira the Dragon**, hoards wealth that could help the people. The organization named after her - **MIRA** - now fights against everything she represents. When you finally face her in the Dragon's Lair, you'll be fighting the embodiment of greed and tax evasion itself.
+The greatest tax evader in history, **Arim the Dragon**, hoards wealth that could help the people. The organization named after her - **MIRA** - now fights against everything she represents. When you finally face her in the Dragon's Lair, you'll be fighting the embodiment of greed and tax evasion itself.
 
 ---
 

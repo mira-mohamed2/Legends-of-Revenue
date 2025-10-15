@@ -88,15 +88,15 @@ export const MarketView: React.FC = () => {
   };
   
   return (
-    <div className="p-6 space-y-6 animate-fade-in">
+    <div className="space-y-4 sm:space-y-6 animate-fade-in max-w-6xl mx-auto">
       <div className="panel">
-        <h1 className="font-medieval text-4xl text-gold mb-3">🏪 Black Market</h1>
-        <p className="font-body text-brown-700 mb-5">
+        <h1 className="font-medieval text-2xl sm:text-3xl md:text-4xl text-gold mb-2 sm:mb-3">🏪 Black Market</h1>
+        <p className="font-body text-sm sm:text-base text-brown-700 mb-4 sm:mb-5">
           Trade tax-free goods and services • No questions asked
         </p>
         
         {/* Player Gold Display */}
-        <div className="bg-gold-light border-2 border-gold rounded p-4 mb-5 hover-lift">
+        <div className="bg-gold-light border-2 border-gold rounded p-3 sm:p-4 mb-4 sm:mb-5 hover-lift">
           <div className="flex items-center justify-between">
             <span className="font-medieval text-xl text-brown">Your Gold:</span>
             <span className="font-medieval text-2xl text-gold">💰 {stats.gold}</span>
@@ -104,44 +104,47 @@ export const MarketView: React.FC = () => {
         </div>
         
         {/* Tab Navigation */}
-        <div className="flex gap-2 mb-5">
+        <div className="flex gap-1.5 sm:gap-2 mb-4 sm:mb-5">
           <button
             onClick={() => setActiveTab('shop')}
-            className={`flex-1 py-2.5 px-4 font-medieval rounded transition-all duration-300 ${
+            className={`flex-1 py-2 sm:py-2.5 px-2 sm:px-4 font-medieval text-sm sm:text-base rounded transition-all duration-300 ${
               activeTab === 'shop'
                 ? 'bg-emerald text-parchment shadow-md transform scale-105'
                 : 'bg-parchment-200 text-brown hover:bg-parchment-300 hover:shadow-md hover:-translate-y-0.5'
             }`}
           >
-            🛒 Buy
+            <span className="hidden sm:inline">🛒 Buy</span>
+            <span className="sm:hidden">🛒</span>
           </button>
           <button
             onClick={() => setActiveTab('sell')}
-            className={`flex-1 py-2.5 px-4 font-medieval rounded transition-all duration-300 ${
+            className={`flex-1 py-2 sm:py-2.5 px-2 sm:px-4 font-medieval text-sm sm:text-base rounded transition-all duration-300 ${
               activeTab === 'sell'
                 ? 'bg-emerald text-parchment shadow-md transform scale-105'
                 : 'bg-parchment-200 text-brown hover:bg-parchment-300 hover:shadow-md hover:-translate-y-0.5'
             }`}
           >
-            💵 Sell
+            <span className="hidden sm:inline">💵 Sell</span>
+            <span className="sm:hidden">💵</span>
           </button>
           <button
             onClick={() => setActiveTab('craft')}
-            className={`flex-1 py-2.5 px-4 font-medieval rounded transition-all duration-300 ${
+            className={`flex-1 py-2 sm:py-2.5 px-2 sm:px-4 font-medieval text-sm sm:text-base rounded transition-all duration-300 ${
               activeTab === 'craft'
                 ? 'bg-emerald text-parchment shadow-md transform scale-105'
                 : 'bg-parchment-200 text-brown hover:bg-parchment-300 hover:shadow-md hover:-translate-y-0.5'
             }`}
           >
-            🔨 Craft (Coming Soon)
+            <span className="hidden sm:inline">🔨 Craft (Soon)</span>
+            <span className="sm:hidden">🔨</span>
           </button>
         </div>
         
         {/* Shop Tab */}
         {activeTab === 'shop' && (
-          <div className="space-y-4">
-            <h2 className="font-medieval text-2xl text-brown mb-4">Available Items</h2>
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+          <div className="space-y-3 sm:space-y-4">
+            <h2 className="font-medieval text-xl sm:text-2xl text-brown mb-3 sm:mb-4">Available Items</h2>
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 sm:gap-4">
               {shopItems.map((item) => {
                 const price = getItemPrice(item);
                 const canAfford = stats.gold >= price;

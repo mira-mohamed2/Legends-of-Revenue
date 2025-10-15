@@ -23,6 +23,7 @@ export interface CharacterData {
   inventory: InventorySlot[];
   location: string;
   enemiesKilled: number;
+  defeatedEnemyTypes?: string[]; // Track which enemy types have been defeated
   locationsVisited: string[];
   avatar: string;
   customAvatar: string | null;
