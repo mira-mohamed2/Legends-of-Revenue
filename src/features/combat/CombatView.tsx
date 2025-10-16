@@ -551,7 +551,50 @@ export const CombatView: React.FC = () => {
                       const success = useItem(slot.itemId);
                       if (success) {
                         const healValue = item.effect?.value || 0;
-                        addCombatLog(`Used ${item.name}! Restored ${healValue} HP.`);
+                        addCombatLog(`You used ${item.name} and restored ${healValue} HP!`);
+                        
+                        // Using a consumable takes a turn - enemy attacks back!
+                        setTimeout(() => {
+                          // Trigger enemy attack animation
+                          setEnemyAttacking(true);
+                          setTimeout(() => setEnemyAttacking(false), 600);
+                          
+                          // Show sword clash
+                          setTimeout(() => {
+                            setShowSwordClash(true);
+                            setTimeout(() => setShowSwordClash(false), 400);
+                          }, 250);
+                          
+                          setTimeout(() => {
+                            const enemyDamage = Math.max(1, enemy.stats.attack - totalDefense);
+                            const actualEnemyDamage = Math.floor(enemyDamage * (0.9 + Math.random() * 0.2));
+                            
+                            takeDamage(actualEnemyDamage);
+                            
+                            // Trigger player hit animation and damage number
+                            setPlayerHit(true);
+                            showDamageNumber(actualEnemyDamage, false, true);
+                            setTimeout(() => setPlayerHit(false), 500);
+                            
+                            addCombatLog(`${enemy.name} attacks while you used the item!`);
+                            addCombatLog(`${enemy.name} deals ${actualEnemyDamage} damage to you!`);
+                            
+                            // Check if player defeated after using consumable
+                            if (stats.hp - actualEnemyDamage <= 0) {
+                              addCombatLog('💀 You have been defeated!');
+                              
+                              const xpLoss = Math.floor(stats.xpToNext * 0.1 * stats.level);
+                              addCombatLog(`You lost ${xpLoss} XP and were returned to the Guild Hall.`);
+                              
+                              // Show defeat modal
+                              setDefeatPenalty({
+                                xpLost: xpLoss,
+                                enemyName: enemy.name,
+                              });
+                              setShowDefeatModal(true);
+                            }
+                          }, 300);
+                        }, 500);
                       } else if (isAtFullHP && isHealPotion) {
                         addCombatLog(`Already at full HP!`);
                       }

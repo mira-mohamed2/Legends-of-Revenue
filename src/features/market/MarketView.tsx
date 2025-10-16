@@ -6,14 +6,26 @@ type MarketTab = 'shop' | 'sell' | 'craft';
 
 export const MarketView: React.FC = () => {
   const [activeTab, setActiveTab] = useState<MarketTab>('shop');
-  const { stats, inventory, addItem, removeItem, spendGold, addGold } = usePlayerStore();
+  const { stats, inventory, addItem, removeItem, spendGold, addGold, defeatedEnemyTypes } = usePlayerStore();
+  
+  // Check if boss gear (legendary items from ARIM) should be available
+  const hasDefeatedArim = defeatedEnemyTypes.has('arim-dragon');
   
   // Shop items available for purchase
-  const shopItems = itemsData.filter(item => 
-    item.category === 'weapon' || 
-    item.category === 'armor' || 
-    item.category === 'consumable'
-  );
+  const shopItems = itemsData.filter(item => {
+    // Only show weapons, armor, and consumables
+    const isShopItem = item.category === 'weapon' || 
+                       item.category === 'armor' || 
+                       item.category === 'consumable';
+    
+    if (!isShopItem) return false;
+    
+    // Hide boss gear (legendary items) until ARIM is defeated
+    const isBossGear = item.id === 'legendary-sword' || item.id === 'dragon-scale-armor';
+    if (isBossGear && !hasDefeatedArim) return false;
+    
+    return true;
+  });
   
   // Get rarity color
   const getRarityColor = (rarity?: string) => {
