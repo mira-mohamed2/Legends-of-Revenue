@@ -3,6 +3,7 @@ import { usePlayerStore } from '../../state/playerStore';
 import { useWorldStore } from '../../state/worldStore';
 import { BattleRewardsModal } from '../../components/BattleRewardsModal';
 import { BattleDefeatModal } from '../../components/BattleDefeatModal';
+import { BossVictoryModal } from '../../components/BossVictoryModal';
 import itemsData from '../../data/items.json';
 
 export const CombatView: React.FC = () => {
@@ -23,6 +24,17 @@ export const CombatView: React.FC = () => {
     x: number;
     y: number;
   }>>([]);
+  
+  // Track active enemy abilities/buffs
+  const [enemyBuffs, setEnemyBuffs] = useState<{
+    damageBoost: number;
+    defenseBoost: number;
+    triggeredAbilities: Set<string>;
+  }>({
+    damageBoost: 0,
+    defenseBoost: 0,
+    triggeredAbilities: new Set(),
+  });
   
   // Battle rewards modal state
   const [showRewardsModal, setShowRewardsModal] = useState(false);
@@ -48,6 +60,20 @@ export const CombatView: React.FC = () => {
     enemyName: '',
   });
   
+  // Boss victory modal state (for ARIM)
+  const [showBossVictoryModal, setShowBossVictoryModal] = useState(false);
+  const [bossVictoryData, setBossVictoryData] = useState<{
+    bossName: string;
+    xp: number;
+    gold: number;
+    items: Array<{ itemId: string; quantity: number }>;
+  }>({
+    bossName: '',
+    xp: 0,
+    gold: 0,
+    items: [],
+  });
+  
   if (!encounterState) return null;
   
   const { enemy } = encounterState;
@@ -65,6 +91,61 @@ export const CombatView: React.FC = () => {
   
   const totalAttack = stats.attack + weaponBonus;
   const totalDefense = stats.defense + armorBonus;
+  
+  // Check and trigger enemy abilities based on HP thresholds or triggers
+  const checkEnemyAbilities = (trigger: string) => {
+    if (!(enemy as any).abilities) return;
+    
+    const abilities = (enemy as any).abilities as Array<{
+      id: string;
+      name: string;
+      trigger: string;
+      effect: { type: string; value: number };
+    }>;
+    
+    abilities.forEach(ability => {
+      // Skip if already triggered
+      if (enemyBuffs.triggeredAbilities.has(ability.id)) return;
+      
+      let shouldTrigger = false;
+      
+      // Check trigger conditions
+      if (trigger === ability.trigger) {
+        shouldTrigger = true;
+      } else if (ability.trigger === 'hp-below-75' && enemy.stats.hp / enemy.stats.maxHp <= 0.75) {
+        shouldTrigger = true;
+      } else if (ability.trigger === 'hp-below-50' && enemy.stats.hp / enemy.stats.maxHp <= 0.50) {
+        shouldTrigger = true;
+      } else if (ability.trigger === 'hp-below-30' && enemy.stats.hp / enemy.stats.maxHp <= 0.30) {
+        shouldTrigger = true;
+      }
+      
+      if (shouldTrigger) {
+        // Apply ability effect
+        if (ability.effect.type === 'damage-boost') {
+          setEnemyBuffs(prev => ({
+            ...prev,
+            damageBoost: prev.damageBoost + ability.effect.value,
+            triggeredAbilities: new Set([...prev.triggeredAbilities, ability.id]),
+          }));
+          addCombatLog(`🔥 ${enemy.name} activates ${ability.name}! (+${ability.effect.value} Attack)`);
+        } else if (ability.effect.type === 'defense-boost') {
+          setEnemyBuffs(prev => ({
+            ...prev,
+            defenseBoost: prev.defenseBoost + ability.effect.value,
+            triggeredAbilities: new Set([...prev.triggeredAbilities, ability.id]),
+          }));
+          addCombatLog(`🛡️ ${enemy.name} activates ${ability.name}! (+${ability.effect.value} Defense)`);
+        }
+      }
+    });
+  };
+  
+  // Check abilities at combat start
+  React.useEffect(() => {
+    checkEnemyAbilities('combat-start');
+  }, []);
+  
   
   // Helper function to show damage numbers
   const showDamageNumber = (damage: number, isCrit: boolean, isPlayer: boolean) => {
@@ -120,6 +201,9 @@ export const CombatView: React.FC = () => {
       } else {
         addCombatLog(`You deal ${actualDamage} damage to ${enemy.name}!`);
       }
+      
+      // Check if new abilities should trigger based on HP threshold
+      checkEnemyAbilities('hp-threshold');
     }, 300);
     
     // Check if enemy defeated
@@ -191,14 +275,28 @@ export const CombatView: React.FC = () => {
         }
       });
       
-      // Show rewards modal immediately
-      setBattleRewards({
-        xp: xpReward,
-        gold: goldReward,
-        items: lootedItems,
-        enemyName: enemy.name,
-      });
-      setShowRewardsModal(true);
+      // Check if this was ARIM (the final boss)
+      const isBossFight = enemy.id === 'arim-dragon';
+      
+      if (isBossFight) {
+        // Show special boss victory modal for ARIM
+        setBossVictoryData({
+          bossName: enemy.name,
+          xp: xpReward,
+          gold: goldReward,
+          items: lootedItems,
+        });
+        setShowBossVictoryModal(true);
+      } else {
+        // Show regular rewards modal for normal enemies
+        setBattleRewards({
+          xp: xpReward,
+          gold: goldReward,
+          items: lootedItems,
+          enemyName: enemy.name,
+        });
+        setShowRewardsModal(true);
+      }
       
       // Don't call endEncounter here - let the modal's "Continue" button handle it
         return;
@@ -217,7 +315,7 @@ export const CombatView: React.FC = () => {
         }, 250);
         
         setTimeout(() => {
-          const enemyDamage = Math.max(1, enemy.stats.attack - totalDefense);
+          const enemyDamage = Math.max(1, (enemy.stats.attack + enemyBuffs.damageBoost) - totalDefense);
           const actualEnemyDamage = Math.floor(enemyDamage * (0.9 + Math.random() * 0.2));
           
           takeDamage(actualEnemyDamage);
@@ -257,7 +355,7 @@ export const CombatView: React.FC = () => {
       
       // Enemy gets a free attack
       setTimeout(() => {
-        const enemyDamage = Math.max(1, enemy.stats.attack - totalDefense);
+        const enemyDamage = Math.max(1, (enemy.stats.attack + enemyBuffs.damageBoost) - totalDefense);
         const actualDamage = Math.floor(enemyDamage * (0.9 + Math.random() * 0.2));
         
         takeDamage(actualDamage);
@@ -388,6 +486,9 @@ export const CombatView: React.FC = () => {
                 <span>Attack:</span>
                 <span>
                   {enemy.stats.attack}
+                  {enemyBuffs.damageBoost > 0 && (
+                    <span className="font-bold text-red-600"> +{enemyBuffs.damageBoost}</span>
+                  )}
                   {enemy.statRanges && (
                     <span className="text-xs text-gray-600 ml-1 hidden sm:inline">
                       ({enemy.statRanges.attack.min}-{enemy.statRanges.attack.max})
@@ -399,6 +500,9 @@ export const CombatView: React.FC = () => {
                 <span>Defense:</span>
                 <span>
                   {enemy.stats.defense}
+                  {enemyBuffs.defenseBoost > 0 && (
+                    <span className="font-bold text-blue-600"> +{enemyBuffs.defenseBoost}</span>
+                  )}
                   {enemy.statRanges && (
                     <span className="text-xs text-gray-600 ml-1 hidden sm:inline">
                       ({enemy.statRanges.defense.min}-{enemy.statRanges.defense.max})
@@ -566,7 +670,7 @@ export const CombatView: React.FC = () => {
                           }, 250);
                           
                           setTimeout(() => {
-                            const enemyDamage = Math.max(1, enemy.stats.attack - totalDefense);
+                            const enemyDamage = Math.max(1, (enemy.stats.attack + enemyBuffs.damageBoost) - totalDefense);
                             const actualEnemyDamage = Math.floor(enemyDamage * (0.9 + Math.random() * 0.2));
                             
                             takeDamage(actualEnemyDamage);
@@ -658,6 +762,19 @@ export const CombatView: React.FC = () => {
         }}
         xpLost={defeatPenalty.xpLost}
         enemyName={defeatPenalty.enemyName}
+      />
+      
+      {/* Boss Victory Modal (for ARIM) */}
+      <BossVictoryModal
+        isOpen={showBossVictoryModal}
+        onClose={() => {
+          setShowBossVictoryModal(false);
+          endEncounter(true); // Exit combat after viewing boss victory
+        }}
+        bossName={bossVictoryData.bossName}
+        xpGained={bossVictoryData.xp}
+        goldGained={bossVictoryData.gold}
+        itemsGained={bossVictoryData.items}
       />
           </div>
         </div>

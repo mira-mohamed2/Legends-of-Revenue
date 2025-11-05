@@ -157,7 +157,7 @@ setInCombat(value)
 ```json
 {
   "id": "tax-dodger-rat",
-  "name": "Tax Dodger Rat",
+  "name": "Tax Dodger Cat",
   "level": 1,
   "hp": 20,
   "attack": 3,

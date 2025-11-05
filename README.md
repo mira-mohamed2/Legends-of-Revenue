@@ -75,7 +75,7 @@ npm run preview
 - 🐉 **Dragon's Lair** - Final boss: Arim the Dragon
 
 ### Enemies
-- 🐀 **Tax Dodger Rat** - Vermin hoarding coins (Level 1)
+- � **Tax Dodger Cat** - Vermin hoarding coins (Level 1)
 - 🏃 **Petty Tax Evader** - Small-time criminals (Level 2-3)
 - 💼 **Offshore Accountant** - Shady financial advisors (Level 4-5)
 - 🤵 **Corrupted Businessman** - Wealthy fraudsters (Level 6-8)

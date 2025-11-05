@@ -10,7 +10,7 @@ Changed all enemy names and descriptions to reflect tax evaders:
 
 | Old Name | New Name | Description |
 |----------|----------|-------------|
-| Coin Rat | **Tax Dodger Rat** | Vermin hoarding stolen coins, evading MIRA |
+| Coin Rat | **Tax Dodger Cat** | Vermin hoarding stolen coins, evading MIRA |
 | Tax Collector's Minion | **Petty Tax Evader** | Small-time crook who hasn't filed taxes in years |
 | Minor Tax Evader | **Offshore Accountant** | Shady financial advisor helping wealthy hide money |
 | Corrupted TP | **Corrupted Businessman** | Wealthy merchant bribing officials and falsifying records |

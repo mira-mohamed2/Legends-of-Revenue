@@ -15,7 +15,7 @@ You are a **MIRA Revenue Agent** - an elite enforcer tasked with tracking down t
 
 ### The Enemies (Tax Evaders)
 
-#### Tax Dodger Rats
+#### Tax Dodger Cat
 Small-time criminals who hoard coins and refuse to report their income. Even the lowest vermin try to evade MIRA's justice.
 
 #### Petty Tax Evaders

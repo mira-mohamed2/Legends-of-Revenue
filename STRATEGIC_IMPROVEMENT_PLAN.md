@@ -228,7 +228,7 @@ Transform Legends of Revenue into an **edutainment** game that teaches real tax 
 **Enhanced Educational Lore:**
 
 **Chapter 1: Understanding Taxation**
-- **Enemy**: "Tax Dodger Rat"
+- **Enemy**: "Tax Dodger Cat"
 - **Lesson**: What are taxes? Why do we pay them?
 - **Quest**: "The First Invoice"
   - NPC explains: "Taxes fund schools, roads, hospitals"

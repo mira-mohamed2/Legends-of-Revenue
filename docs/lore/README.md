@@ -73,7 +73,7 @@ You are a **MIRA Agent**—not merely an employee, but a **warrior** in the eter
 
 From **MIRA Headquarters**, you will embark on a path of escalating challenge:
 
-1. **Tax Officer Trainee** - Learn the basics, face Tax Dodger Rats
+1. **Tax Officer Trainee** - Learn the basics, face Tax Dodger Cat
 2. **Tax Officer** - Hunt Petty Tax Evaders in the streets
 3. **Senior Tax Officer** - Confront Offshore Accountants in their tropical hideouts
 4. **Elite Enforcer** - Battle Corrupted Businessmen in their corporate fortresses  
@@ -103,7 +103,7 @@ From **MIRA Headquarters**, you will embark on a path of escalating challenge:
 
 ### Enemies
 
-**🐀 Tax Dodger Rats**
+**� Tax Dodger Cat**
 - **Threat Level:** ⭐ Trivial
 - **Locations:** Everywhere (urban vermin)
 - **Combat Style:** Quick, cowardly strikes
@@ -166,7 +166,7 @@ From **MIRA Headquarters**, you will embark on a path of escalating challenge:
 
 **Black Market Alley** 🌑
 - Danger: Medium
-- Enemies: Tax Dodger Rats, Petty Evaders
+- Enemies: Tax Dodger Cat, Petty Evaders
 - Description: Underground illegal trades
 
 **Border Checkpoint** 🛂

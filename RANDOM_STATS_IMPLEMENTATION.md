@@ -20,7 +20,7 @@ Created three utility functions:
 ### 3. Enemy Data Updates (`src/data/enemies.json`)
 Converted all 4 enemies from fixed stats to stat ranges:
 
-- **Tax Dodger Rat**: HP 12-18, Attack 3-5, Defense 0-2
+- **Tax Dodger Cat**: HP 12-18, Attack 3-5, Defense 0-2
 - **Petty Tax Evader**: HP 20-30, Attack 5-8, Defense 2-4
 - **Offshore Accountant**: HP 16-24, Attack 6-9, Defense 1-3
 - **Corrupted Businessman**: HP 30-40, Attack 7-10, Defense 4-6

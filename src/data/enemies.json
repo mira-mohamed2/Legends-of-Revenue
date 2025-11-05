@@ -1,7 +1,7 @@
 [
   {
     "id": "coin-rat",
-    "name": "Tax Dodger Rat",
+    "name": "Tax Dodger Cat",
     "image": "/images/enemies/tax-collector.svg",
     "statRanges": {
       "hp": { "min": 12, "max": 18 },

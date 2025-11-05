@@ -38,7 +38,7 @@ Your badge represents hope. Your mission is righteous. Your enemy is greed itsel
 
 1. **Tax Officer Trainee** (Levels 1-2)
    - Learn combat basics
-   - Face Tax Dodger Rats
+   - Face Tax Dodger Cat
    - Complete tutorial missions
    - Earn your field badge
 
@@ -70,7 +70,7 @@ Your badge represents hope. Your mission is righteous. Your enemy is greed itsel
 
 ## 👹 Enemies of Justice
 
-### Tax Dodger Rat 🐀
+### Tax Dodger Cat �
 **Threat Level:** ⭐ Trivial
 
 *"In every shadow, a coin-hoarding vermin awaits."*

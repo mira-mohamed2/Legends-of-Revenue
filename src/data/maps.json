@@ -79,7 +79,7 @@
     "name": "Shell Company HQ",
     "type": "dungeon",
     "description": "A fake business front used to launder money and evade taxes. Stacks of falsified ledgers fill every corner.",
-    "neighbors": ["dark-grove", "underground-vault"],
+    "neighbors": ["dark-grove", "underground-vault", "miras-palace"],
     "encounterRate": 0.65,
     "encounterTable": [
       { "enemyId": "tax-collector-minion", "weight": 6 },
@@ -92,7 +92,7 @@
     "name": "Hidden Vault",
     "type": "dungeon",
     "description": "A secret chamber where tax evaders hide their wealth from MIRA. Recovered funds will be returned to the people.",
-    "neighbors": ["tax-collectors-office", "black-market"],
+    "neighbors": ["tax-collectors-office", "black-market", "miras-palace"],
     "encounterRate": 0.8,
     "encounterTable": [
       { "enemyId": "corrupted-guard", "weight": 7 },
