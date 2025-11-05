@@ -34,13 +34,13 @@ interface WorldState {
 }
 
 export const useWorldStore = create<WorldState>((set, get) => ({
-  currentTile: 'guild-hall',
+  currentTile: 'guild-hall', // Start at Guild Hall
   mapData: mapData as MapTile[],
   encounterState: null,
   gameMode: 'explore',
   combatLog: [],
-  locationProgress: { 'guild-hall': 10 }, // Start location is already "explored"
-  unlockedLocations: ['guild-hall', 'merchants-row', 'city-gates'], // Start with guild hall and its neighbors unlocked
+  locationProgress: { 'guild-hall': 100 }, // MIRA HQ starts fully explored
+  unlockedLocations: ['guild-hall', 'merchants-row', 'city-gates', 'miras-palace'], // Business District unlocked as MIRA HQ is fully explored
   
   moveTo: (tileId) => {
     const tile = get().mapData.find(t => t.id === tileId);
@@ -228,8 +228,8 @@ export const useWorldStore = create<WorldState>((set, get) => ({
     
     set({
       currentTile: data.currentTile || 'guild-hall',
-      locationProgress: data.locationProgress || { 'guild-hall': 10 },
-      unlockedLocations: data.unlockedLocations || ['guild-hall', 'merchants-row', 'city-gates'],
+      locationProgress: data.locationProgress || { 'guild-hall': 100 },
+      unlockedLocations: data.unlockedLocations || ['guild-hall', 'merchants-row', 'city-gates', 'miras-palace'],
     });
     
     return true;
@@ -238,8 +238,8 @@ export const useWorldStore = create<WorldState>((set, get) => ({
   resetWorld: () => {
     set({
       currentTile: 'guild-hall',
-      locationProgress: { 'guild-hall': 10 },
-      unlockedLocations: ['guild-hall', 'merchants-row', 'city-gates'],
+      locationProgress: { 'guild-hall': 100 },
+      unlockedLocations: ['guild-hall', 'merchants-row', 'city-gates', 'miras-palace'],
       encounterState: null,
       gameMode: 'explore',
       combatLog: [],

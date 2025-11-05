@@ -1,0 +1,95 @@
+═══════════════════════════════════════════════════
+    MIRA EXPO - GAME STATION QUICK GUIDE
+═══════════════════════════════════════════════════
+
+📱 FOR EACH NEW PLAYER:
+─────────────────────────────────────────────────
+
+  1. Click: 🔄 "New Player" button (top-right)
+  
+  2. Click: "OK" on popup
+     → CSV auto-saves to Downloads ✅
+  
+  3. Player fills registration:
+     • Username (unique)
+     • Full Name
+     • Phone (7XXXXXX or 9XXXXXX)
+     • Email
+  
+  4. Player clicks: "🎮 Start Playing!"
+  
+  5. Player enjoys the game
+  
+  6. When done → Repeat from step 1
+
+
+📊 END OF DAY - GET ALL DATA:
+─────────────────────────────────────────────────
+
+  1. Click: 🔐 "Admin" button (bottom-right)
+  
+  2. Enter password: MIRA2024
+  
+  3. Click: "📥 Export to Excel (CSV)"
+  
+  4. Open file from Downloads folder
+  
+  5. Contact winners! (Won Prize = YES)
+
+
+🏆 CSV FILE CONTAINS:
+─────────────────────────────────────────────────
+
+  • Registration ID (unique code)
+  • Username
+  • Full Name
+  • Phone Number (for calling)
+  • Email (for emailing)
+  • Registration Time
+  • Final Score
+  • Won Prize (YES/NO)
+
+
+💡 TIPS:
+─────────────────────────────────────────────────
+
+  ✓ Auto-backup happens every player switch
+  ✓ Final CSV has ALL players
+  ✓ Keep Downloads folder organized
+  ✓ Winners: defeated ARIM boss
+  ✓ Score = Gold + (Level × 1000) + XP
+
+
+🐛 TROUBLESHOOTING:
+─────────────────────────────────────────────────
+
+  Problem: CSV not downloading
+  → Allow popups in browser
+  → Check Downloads folder
+  
+  Problem: Registration form stuck
+  → Refresh page (F5)
+  
+  Problem: Button not responding
+  → Wait 2 seconds and try again
+  
+  Problem: Player wants to retry
+  → They can play again with same login
+  → Or register new account
+
+
+📞 SUPPORT:
+─────────────────────────────────────────────────
+
+  Admin Password: MIRA2024
+  Game URL: http://localhost:7766
+  Port: 7766
+  
+  Technical Issues: [Your contact]
+
+
+═══════════════════════════════════════════════════
+     🎮 HAVE FUN AT THE EXPO! 🎮
+═══════════════════════════════════════════════════
+
+Print this and keep at game station!

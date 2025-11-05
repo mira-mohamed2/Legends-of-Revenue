@@ -1,0 +1,234 @@
+{
+  "categories": {
+    "gst_basics": {
+      "weight": 0.35,
+      "difficulty": "easy",
+      "questions": [
+        {
+          "id": "q001",
+          "question": "What is the general GST rate in Maldives?",
+          "answers": [
+            { "text": "6%", "correct": false },
+            { "text": "8%", "correct": true },
+            { "text": "10%", "correct": false }
+          ],
+          "explanation": "The general GST rate in Maldives is 8%. The tourism sector rate is 17% (increased from 16% to 17% from July 2025 onwards).",
+          "points": 50,
+          "bonusTime": 2,
+          "category": "GST Basics"
+        },
+        {
+          "id": "q002",
+          "question": "Which organization manages tax collection in Maldives?",
+          "answers": [
+            { "text": "Ministry of Finance", "correct": false },
+            { "text": "MIRA", "correct": true },
+            { "text": "Central Bank", "correct": false }
+          ],
+          "explanation": "MIRA (Maldives Inland Revenue Authority) is responsible for all tax collection and administration in Maldives.",
+          "points": 50,
+          "bonusTime": 2,
+          "category": "GST Basics"
+        },
+        {
+          "id": "q003",
+          "question": "What is the GST rate for the tourism sector?",
+          "answers": [
+            { "text": "16%", "correct": false },
+            { "text": "17%", "correct": true },
+            { "text": "12%", "correct": false }
+          ],
+          "explanation": "The tourism sector GST rate is 17%. This was increased from 16% from July 1, 2025 onwards.",
+          "points": 100,
+          "bonusTime": 2,
+          "category": "GST Basics"
+        },
+        {
+          "id": "q004",
+          "question": "Which of these goods is zero-rated for GST?",
+          "answers": [
+            { "text": "Electronics", "correct": false },
+            { "text": "Rice and Flour", "correct": true },
+            { "text": "Furniture", "correct": false }
+          ],
+          "explanation": "Essential goods like rice, flour, milk, and baby products are zero-rated (0% GST) to keep them affordable.",
+          "points": 75,
+          "bonusTime": 2,
+          "category": "GST Basics"
+        }
+      ]
+    },
+    "filing_deadline": {
+      "weight": 0.25,
+      "difficulty": "easy",
+      "questions": [
+        {
+          "id": "q005",
+          "question": "By which date must monthly GST returns be filed?",
+          "answers": [
+            { "text": "20th", "correct": false },
+            { "text": "28th", "correct": true },
+            { "text": "30th", "correct": false }
+          ],
+          "explanation": "GST returns must be filed by the 28th of the month following the taxable period. If this date falls on a public holiday, the new deadline falls in the next working day. Late filing attracts penalties!",
+          "points": 75,
+          "bonusTime": 3,
+          "category": "Filing Requirements"
+        },
+        {
+          "id": "q006",
+          "question": "What happens if you file GST late?",
+          "answers": [
+            { "text": "Nothing happens", "correct": false },
+            { "text": "Penalties apply", "correct": true },
+            { "text": "Only a warning", "correct": false }
+          ],
+          "explanation": "Late filing attracts penalties based on the tax amount and number of days delayed. Always file on time!",
+          "points": 75,
+          "bonusTime": 2,
+          "category": "Filing Requirements"
+        },
+        {
+          "id": "q007",
+          "question": "How can you file GST returns online?",
+          "answers": [
+            { "text": "Email to MIRA", "correct": false },
+            { "text": "MIRAConnect", "correct": true },
+            { "text": "Any website", "correct": false }
+          ],
+          "explanation": "File GST returns online from MIRAConnect - it's fast, secure, and available 24/7!",
+          "points": 50,
+          "bonusTime": 2,
+          "category": "Filing Requirements"
+        }
+      ]
+    },
+    "input_tax": {
+      "weight": 0.20,
+      "difficulty": "medium",
+      "questions": [
+        {
+          "id": "q008",
+          "question": "What is input tax credit?",
+          "answers": [
+            { "text": "Tax on sales", "correct": false },
+            { "text": "Tax on purchases", "correct": true },
+            { "text": "A penalty", "correct": false }
+          ],
+          "explanation": "Input tax is GST you pay on business purchases. You can claim it back when filing your GST return, reducing your tax bill.",
+          "points": 100,
+          "bonusTime": 3,
+          "category": "Input Tax"
+        },
+        {
+          "id": "q009",
+          "question": "How long can you claim input tax after receiving an invoice?",
+          "answers": [
+            { "text": "6 months", "correct": false },
+            { "text": "12 months", "correct": true },
+            { "text": "24 months", "correct": false }
+          ],
+          "explanation": "Input tax must be claimed within 12 months of the date of supply or invoice issuance. Don't delay!",
+          "points": 100,
+          "bonusTime": 3,
+          "category": "Input Tax"
+        },
+        {
+          "id": "q010",
+          "question": "Can you claim input tax on GST exempt items?",
+          "answers": [
+            { "text": "Yes, always", "correct": false },
+            { "text": "No, they are exempt", "correct": true },
+            { "text": "Only for education", "correct": false }
+          ],
+          "explanation": "You cannot claim input tax on exempt supplies exempt supplies such as rent, utilities, and education!",
+          "points": 100,
+          "bonusTime": 3,
+          "category": "Input Tax"
+        }
+      ]
+    },
+    "compliance": {
+      "weight": 0.15,
+      "difficulty": "medium",
+      "questions": [
+        {
+          "id": "q011",
+          "question": "What must a valid tax invoice include?",
+          "answers": [
+            { "text": "Only the price", "correct": false },
+            { "text": "TIN and GST amount", "correct": true },
+            { "text": "Just the date", "correct": false }
+          ],
+          "explanation": "A valid tax invoice must include: Supplier & Customer TIN, serial number, date, description, GST rate and amount.",
+          "points": 100,
+          "bonusTime": 3,
+          "category": "Compliance"
+        },
+        {
+          "id": "q012",
+          "question": "What is the GST registration threshold?",
+          "answers": [
+            { "text": "MVR 500,000", "correct": false },
+            { "text": "MVR 1,000,000", "correct": true },
+            { "text": "MVR 2,000,000", "correct": false }
+          ],
+          "explanation": "You must register for GST when your business turnover exceeds MVR 1,000,000 in a 12-month period.",
+          "points": 100,
+          "bonusTime": 3,
+          "category": "Compliance"
+        },
+        {
+          "id": "q013",
+          "question": "How can you verify a supplier's TIN?",
+          "answers": [
+            { "text": "Just trust them", "correct": false },
+            { "text": "Check on GST Lookup", "correct": true },
+            { "text": "No way to verify", "correct": false }
+          ],
+          "explanation": "Always verify supplier TINs on GST Lookup available on the MIRA website to ensure you can claim valid input tax credits.",
+          "points": 100,
+          "bonusTime": 3,
+          "category": "Compliance"
+        }
+      ]
+    },
+    "mira_services": {
+      "weight": 0.05,
+      "difficulty": "easy",
+      "questions": [
+        {
+          "id": "q014",
+          "question": "What is MIRA's helpline number?",
+          "answers": [
+            { "text": "1212", "correct": false },
+            { "text": "1415", "correct": true },
+            { "text": "1515", "correct": false }
+          ],
+          "explanation": "Call MIRA at 1415 for GST help and support, Sunday to Thursday 8am-4pm.",
+          "points": 50,
+          "bonusTime": 2,
+          "category": "MIRA Services"
+        },
+        {
+          "id": "q015",
+          "question": "Does MIRA offer free Tax related training?",
+          "answers": [
+            { "text": "No training available", "correct": false },
+            { "text": "Yes, free sessions", "correct": true },
+            { "text": "Only paid training", "correct": false }
+          ],
+          "explanation": "MIRA offers free training sessions, available on the MIRA website!",
+          "points": 50,
+          "bonusTime": 2,
+          "category": "MIRA Services"
+        }
+      ]
+    }
+  },
+  "metadata": {
+    "totalQuestions": 15,
+    "lastUpdated": "2025-11-04",
+    "version": "1.0"
+  }
+}

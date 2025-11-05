@@ -16,7 +16,7 @@
 
 ✅ **Character Storage System** - Import/Export characters, backup progress  
 ✅ **Combat System** - Turn-based battles with consumable items  
-✅ **Avatar System** - Choose from 4 default avatars or upload custom  
+✅ **Avatar System** - Choose from 6 default avatars (Male/Female Agents + fantasy classes) or upload custom  
 ✅ **Map Exploration** - 12 unique locations to discover  
 ✅ **Quest System** - Complete MIRA missions  
 ✅ **Inventory Management** - Collect weapons, armor, and consumables  
@@ -56,7 +56,7 @@ npm run preview
 ## 🎲 How to Play
 
 1. **Create Your Agent** - Register with a username and password
-2. **Choose Your Avatar** - Select from 4 default avatars or upload your own
+2. **Choose Your Avatar** - Select from 6 default avatars (Male/Female MIRA Agents, Warrior, Mage, Rogue, Healer) or upload your own
 3. **Explore the World** - Navigate through 12 locations (MIRA HQ, Business District, Black Market, etc.)
 4. **Battle Tax Evaders** - Fight enemies in turn-based combat
 5. **Use Consumables** - Heal during battle with health potions
@@ -170,8 +170,14 @@ Turn-based combat with:
 - XP and gold rewards
 
 ### Avatar System
-- 4 default avatars (Warrior, Mage, Rogue, Priest)
-- Custom avatar upload
+- 6 default avatars:
+  - Male MIRA Agent (default)
+  - Female MIRA Agent
+  - Warrior
+  - Mage
+  - Rogue
+  - Healer
+- Custom avatar upload (JPG, PNG, GIF, SVG - Max 2MB)
 - Displayed in combat and character screen
 
 ### UI Design

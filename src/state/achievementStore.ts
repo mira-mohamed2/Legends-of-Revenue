@@ -1,5 +1,5 @@
 import { create } from 'zustand';
-import { saveToStorage, loadFromStorage } from '../utils/storage';
+import { updateAchievements } from '../utils/database';
 
 export interface Achievement {
   id: string;
@@ -170,39 +170,20 @@ export const useAchievementStore = create<AchievementState>((set, get) => ({
     
     if (!username) return;
     
-    saveToStorage(`achievements:${username}`, {
-      achievements: achievements.map(a => ({
-        id: a.id,
-        unlocked: a.unlocked,
-        unlockedAt: a.unlockedAt,
-      })),
+    // Save to database instead of localStorage
+    updateAchievements(username, achievements.map(a => ({
+      id: a.id,
+      unlocked: a.unlocked,
+      unlockedAt: a.unlockedAt,
+    }))).catch(error => {
+      console.error('Failed to save achievements:', error);
     });
   },
   
   loadAchievements: (username) => {
-    const data = loadFromStorage<{
-      achievements?: Array<{ id: string; unlocked: boolean; unlockedAt?: string }>;
-    }>(`achievements:${username}`);
-    
-    if (!data || !data.achievements) {
-      return false;
-    }
-    
-    // Merge saved data with default achievement list
-    set((state) => ({
-      achievements: state.achievements.map(achievement => {
-        const saved = data.achievements!.find(a => a.id === achievement.id);
-        if (saved) {
-          return {
-            ...achievement,
-            unlocked: saved.unlocked,
-            unlockedAt: saved.unlockedAt,
-          };
-        }
-        return achievement;
-      }),
-    }));
-    
+    // Achievements will be loaded from database in App.tsx
+    // This function now just sets the username for saveAchievements
+    (window as any).__currentUsername = username;
     return true;
   },
   

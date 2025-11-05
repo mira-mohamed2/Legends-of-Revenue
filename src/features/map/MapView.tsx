@@ -201,16 +201,18 @@ export const MapView: React.FC = () => {
               const locationSteps = getLocationProgress(location.id);
               
               return (
-                <div
+                <button
                   key={location.id}
-                  className={`p-4 rounded-lg border-2 transition-all ${
+                  onClick={() => locationUnlocked && !isCurrentLocation && moveTo(location.id)}
+                  disabled={!locationUnlocked || isCurrentLocation}
+                  className={`p-4 rounded-lg border-2 transition-all text-left ${
                     isCurrentLocation 
-                      ? 'bg-gradient-to-br from-teal-100 to-cyan-100 border-teal-600 shadow-lg' 
+                      ? 'bg-gradient-to-br from-teal-100 to-cyan-100 border-teal-600 shadow-lg cursor-default' 
                       : isNeighbor && locationUnlocked
-                      ? 'bg-gradient-to-br from-orange-50 to-yellow-50 border-orange-400'
+                      ? 'bg-gradient-to-br from-orange-50 to-yellow-50 border-orange-400 hover:border-teal-600 hover:shadow-lg cursor-pointer transform hover:-translate-y-1'
                       : locationUnlocked
-                      ? 'bg-white border-gray-300'
-                      : 'bg-gray-100 border-gray-300 opacity-50'
+                      ? 'bg-white border-gray-300 hover:border-teal-600 hover:shadow-lg cursor-pointer transform hover:-translate-y-1'
+                      : 'bg-gray-100 border-gray-300 opacity-50 cursor-not-allowed'
                   }`}
                 >
                   <div className="flex items-start gap-3">
@@ -220,7 +222,7 @@ export const MapView: React.FC = () => {
                         {location.name}
                         {isCurrentLocation && <span className="text-xs">⬅ You</span>}
                       </h4>
-                      <div className="flex items-center gap-2 mt-1">
+                      <div className="flex items-center gap-2 mt-1 flex-wrap">
                         <span className={`px-2 py-0.5 rounded text-[10px] font-bold ${locationDanger.bg} ${locationDanger.color}`}>
                           {locationDanger.text}
                         </span>
@@ -229,10 +231,15 @@ export const MapView: React.FC = () => {
                             ({locationSteps}/10)
                           </span>
                         )}
+                        {locationUnlocked && !isCurrentLocation && (
+                          <span className="text-[10px] text-teal-600 font-bold">
+                            Click to travel
+                          </span>
+                        )}
                       </div>
                     </div>
                   </div>
-                </div>
+                </button>
               );
             })}
           </div>

@@ -113,9 +113,9 @@
     "name": "ARIM - The Tax Evasion Dragon",
     "image": "/images/enemies/arim-dragon.svg",
     "statRanges": {
-      "hp": { "min": 100, "max": 150 },
-      "attack": { "min": 15, "max": 25 },
-      "defense": { "min": 8, "max": 12 }
+      "hp": { "min": 600, "max": 600 },
+      "attack": { "min": 25, "max": 35 },
+      "defense": { "min": 10, "max": 10 }
     },
     "rewards": {
       "xp": 500,

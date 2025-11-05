@@ -60,14 +60,18 @@ const DEFAULT_EQUIPMENT: PlayerEquipment = {
 };
 
 export const usePlayerStore = create<PlayerState>((set, get) => ({
-  stats: DEFAULT_STATS,
+  stats: {
+    ...DEFAULT_STATS,
+    hp: 300,
+    maxHp: 300,
+  },
   equipment: DEFAULT_EQUIPMENT,
   inventory: [],
-  location: 'guild-hall',
+  location: 'guild-hall', // Start at Guild Hall
   enemiesKilled: 0,
   defeatedEnemyTypes: new Set<string>(),
   locationsVisited: new Set(['guild-hall']),
-  avatar: '/images/avatars/rogue.svg', // Default avatar
+  avatar: '/images/avatars/male-ta-default.jpg', // Default avatar - Male MIRA Agent
   customAvatar: null,
   
   updateStats: (newStats) => {
@@ -163,7 +167,7 @@ export const usePlayerStore = create<PlayerState>((set, get) => ({
           hp: state.stats.maxHp, // Restore full HP
           xp: newXP,
         },
-        location: 'guild-hall', // Teleport to Guild Hall
+        location: 'guild-hall', // Return to Guild Hall
       };
     });
     get().savePlayer();
@@ -364,7 +368,11 @@ export const usePlayerStore = create<PlayerState>((set, get) => ({
   
   initializePlayer: (_username: string) => {
     set({
-      stats: DEFAULT_STATS,
+      stats: {
+        ...DEFAULT_STATS,
+        hp: 300,
+        maxHp: 300,
+      },
       equipment: DEFAULT_EQUIPMENT,
       inventory: [
         { itemId: 'health-potion', quantity: 2 },
@@ -372,7 +380,7 @@ export const usePlayerStore = create<PlayerState>((set, get) => ({
       location: 'guild-hall',
       enemiesKilled: 0,
       locationsVisited: new Set(['guild-hall']),
-      avatar: '/images/avatars/rogue.svg',
+      avatar: '/images/avatars/male-ta-default.jpg',
       customAvatar: null,
     });
     get().savePlayer();
@@ -431,8 +439,8 @@ export const usePlayerStore = create<PlayerState>((set, get) => ({
         location: characterData.location,
         enemiesKilled: characterData.enemiesKilled || 0,
         defeatedEnemyTypes: new Set(characterData.defeatedEnemyTypes || []),
-        locationsVisited: new Set(characterData.locationsVisited || ['guild-hall']),
-        avatar: characterData.avatar || '/images/avatars/rogue.svg',
+        locationsVisited: new Set(characterData.locationsVisited || ['miras-palace']),
+        avatar: characterData.avatar || '/images/avatars/male-ta-default.jpg',
         customAvatar: characterData.customAvatar || null,
       });
       
@@ -472,8 +480,8 @@ export const usePlayerStore = create<PlayerState>((set, get) => ({
       location: data.location,
       enemiesKilled: data.enemiesKilled || 0,
       defeatedEnemyTypes: new Set(data.defeatedEnemyTypes || []),
-      locationsVisited: new Set(data.locationsVisited || ['guild-hall']),
-      avatar: data.avatar || '/images/avatars/rogue.svg',
+      locationsVisited: new Set(data.locationsVisited || ['miras-palace']),
+      avatar: data.avatar || '/images/avatars/male-ta-default.jpg',
       customAvatar: data.customAvatar || null,
     });
     
@@ -483,14 +491,18 @@ export const usePlayerStore = create<PlayerState>((set, get) => ({
   
   resetPlayer: () => {
     set({
-      stats: DEFAULT_STATS,
+      stats: {
+        ...DEFAULT_STATS,
+        hp: 300,
+        maxHp: 300,
+      },
       equipment: DEFAULT_EQUIPMENT,
       inventory: [],
       location: 'guild-hall',
       enemiesKilled: 0,
       defeatedEnemyTypes: new Set<string>(),
       locationsVisited: new Set(['guild-hall']),
-      avatar: '/images/avatars/rogue.svg',
+      avatar: '/images/avatars/male-ta-default.jpg',
       customAvatar: null,
     });
   },

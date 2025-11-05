@@ -1,14 +1,52 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { usePlayerStore } from '../../state/playerStore';
 import { useWorldStore } from '../../state/worldStore';
 import { BattleRewardsModal } from '../../components/BattleRewardsModal';
 import { BattleDefeatModal } from '../../components/BattleDefeatModal';
 import { BossVictoryModal } from '../../components/BossVictoryModal';
 import itemsData from '../../data/items.json';
+import quizData from '../../data/quiz-questions.json';
+import { specialAttacks } from '../../data/specialAttacks';
+import type { QuizQuestion, SpecialAttack, CategoryName } from '../../types/quiz';
+import { recordSession, updateQuestionHistory, updatePlayer } from '../../utils/database';
 
 export const CombatView: React.FC = () => {
   const { stats, equipment, inventory, gainXP, takeDamage, addGold, addItem, heal, handleDeath, incrementEnemiesKilled, recordEnemyDefeated, useItem } = usePlayerStore();
   const { encounterState, combatLog, addCombatLog, endEncounter } = useWorldStore();
+  
+  // Quiz combat state
+  const [combatPhase, setCombatPhase] = useState<'select-attack' | 'answer-question' | 'execute-attack' | 'defend-question'>('select-attack');
+  const [selectedAttack, setSelectedAttack] = useState<SpecialAttack | null>(null);
+  const [currentQuestion, setCurrentQuestion] = useState<QuizQuestion | null>(null);
+  const [shuffledAnswers, setShuffledAnswers] = useState<Array<{ text: string; correct: boolean; originalIndex: number }>>([]);
+  const [answeredQuestionIds, setAnsweredQuestionIds] = useState<Set<string>>(new Set()); // Questions answered by this character
+  const [questionPoints, setQuestionPoints] = useState(0); // Points earned from questions
+  const [questionsCorrect, setQuestionsCorrect] = useState(0);
+  const [questionsWrong, setQuestionsWrong] = useState(0);
+  const [showExplanation, setShowExplanation] = useState(false);
+  const [lastAnswer, setLastAnswer] = useState<{ correct: boolean; explanation: string } | null>(null);
+  const [attackDebuff, setAttackDebuff] = useState(0); // For Asset Seizure special attack
+  const [manualDefenseEnabled, setManualDefenseEnabled] = useState(false); // Manual defense toggle
+  const [isDefending, setIsDefending] = useState(false); // Currently in defense phase
+  
+  // Load answered questions from localStorage on mount
+  useEffect(() => {
+    const userData = localStorage.getItem('current_user');
+    if (userData) {
+      try {
+        const user = JSON.parse(userData);
+        const questionHistory = user.characterData?.questionHistory;
+        if (questionHistory) {
+          setAnsweredQuestionIds(new Set(questionHistory.answeredQuestions || []));
+          setQuestionPoints(questionHistory.totalPoints || 0);
+          setQuestionsCorrect(questionHistory.correctAnswers || 0);
+          setQuestionsWrong(questionHistory.wrongAnswers || 0);
+        }
+      } catch (error) {
+        console.error('Failed to load question history:', error);
+      }
+    }
+  }, []);
   
   // Animation states
   const [playerAttacking, setPlayerAttacking] = useState(false);
@@ -146,6 +184,529 @@ export const CombatView: React.FC = () => {
     checkEnemyAbilities('combat-start');
   }, []);
   
+  // Quiz helper functions
+  const getRandomQuestion = (category: CategoryName): QuizQuestion | null => {
+    const categoryData = (quizData.categories as any)[category];
+    if (!categoryData || !categoryData.questions) return null;
+    
+    // Filter out questions that have already been answered by this character
+    const availableQuestions = categoryData.questions.filter(
+      (q: QuizQuestion) => !answeredQuestionIds.has(q.id)
+    );
+    
+    if (availableQuestions.length === 0) return null;
+    
+    // Select random question
+    const randomIndex = Math.floor(Math.random() * availableQuestions.length);
+    return availableQuestions[randomIndex];
+  };
+  
+  const handleAttackSelection = (attack: SpecialAttack) => {
+    // Get a question from the attack's category
+    const question = getRandomQuestion(attack.category);
+    
+    if (!question) {
+      addCombatLog('No more questions available in this category!');
+      return;
+    }
+    
+    // Shuffle the answers
+    const answersWithIndex = question.answers.map((answer, index) => ({
+      ...answer,
+      originalIndex: index
+    }));
+    
+    // Fisher-Yates shuffle algorithm
+    const shuffled = [...answersWithIndex];
+    for (let i = shuffled.length - 1; i > 0; i--) {
+      const j = Math.floor(Math.random() * (i + 1));
+      [shuffled[i], shuffled[j]] = [shuffled[j], shuffled[i]];
+    }
+    
+    setSelectedAttack(attack);
+    setCurrentQuestion(question);
+    setShuffledAnswers(shuffled);
+    setCombatPhase('answer-question');
+    setShowExplanation(false);
+    setLastAnswer(null);
+  };
+  
+  const handleAnswerSelection = async (answerIndex: number) => {
+    if (!currentQuestion || shuffledAnswers.length === 0) return;
+    
+    // Check if this is a defense question
+    if (isDefending) {
+      handleDefenseAnswer(answerIndex);
+      return;
+    }
+    
+    // Regular attack question
+    if (!selectedAttack) return;
+    
+    // Check if the selected shuffled answer is correct
+    const isCorrect = shuffledAnswers[answerIndex].correct;
+    
+    // Calculate points
+    const basePoints = currentQuestion.points || 50;
+    const pointsChange = isCorrect ? basePoints : -Math.floor(basePoints * 0.25); // 25% penalty for wrong answer
+    
+    // Calculate new values (state updates are async, so compute manually)
+    const newAnsweredQuestions = [...answeredQuestionIds, currentQuestion.id];
+    const newTotalPoints = questionPoints + pointsChange;
+    const newCorrectAnswers = questionsCorrect + (isCorrect ? 1 : 0);
+    const newWrongAnswers = questionsWrong + (isCorrect ? 0 : 1);
+    
+    // Update local state with new values
+    setAnsweredQuestionIds(new Set(newAnsweredQuestions));
+    setQuestionPoints(newTotalPoints);
+    setQuestionsCorrect(newCorrectAnswers);
+    setQuestionsWrong(newWrongAnswers);
+    
+    // Update database and localStorage
+    const userData = localStorage.getItem('current_user');
+    if (userData) {
+      try {
+        const user = JSON.parse(userData);
+        
+        // Prepare full question history object
+        const updatedQuestionHistory = {
+          answeredQuestions: newAnsweredQuestions,
+          totalPoints: newTotalPoints,
+          correctAnswers: newCorrectAnswers,
+          wrongAnswers: newWrongAnswers,
+        };
+        
+        // Update database with complete history (await to ensure it saves)
+        await updateQuestionHistory(user.username, updatedQuestionHistory);
+        console.log(`✅ Question ${currentQuestion.id} saved to database`);
+        
+        // Update player's score in database
+        await updatePlayer(user.username, {
+          totalScore: newTotalPoints,
+          highestScore: Math.max(newTotalPoints, user.highestScore || 0)
+        });
+        console.log(`✅ Score updated: ${newTotalPoints} points`);
+        
+        // Update localStorage
+        localStorage.setItem(
+          `questionHistory:${user.username}`,
+          JSON.stringify(updatedQuestionHistory)
+        );
+      } catch (error) {
+        console.error('Failed to update question history:', error);
+      }
+    }
+    
+    // Show explanation
+    setLastAnswer({
+      correct: isCorrect,
+      explanation: currentQuestion.explanation,
+    });
+    setShowExplanation(true);
+    
+    // Auto-proceed to attack after 3 seconds
+    setTimeout(() => {
+      if (isCorrect) {
+        addCombatLog(`✅ Correct! +${pointsChange} points`);
+        executeSpecialAttack(selectedAttack);
+      } else {
+        // Wrong answer - player misses completely
+        addCombatLog(`❌ Wrong answer! ${pointsChange} points`);
+        setShowExplanation(false);
+        setCurrentQuestion(null);
+        setShuffledAnswers([]);
+        setSelectedAttack(null);
+        setCombatPhase('select-attack');
+        
+        // Enemy still gets to attack after player's miss
+        setTimeout(() => {
+          enemyAttack();
+        }, 500);
+      }
+    }, 3000);
+  };
+  
+  const handleDefenseAnswer = async (answerIndex: number) => {
+    if (!currentQuestion) return;
+    
+    const isCorrect = shuffledAnswers[answerIndex].correct;
+    
+    // Calculate points
+    const basePoints = currentQuestion.points || 50;
+    const pointsChange = isCorrect ? basePoints : -Math.floor(basePoints * 0.25); // 25% penalty for wrong answer
+    
+    // Calculate new values (state updates are async, so compute manually)
+    const newAnsweredQuestions = [...answeredQuestionIds, currentQuestion.id];
+    const newTotalPoints = questionPoints + pointsChange;
+    const newCorrectAnswers = questionsCorrect + (isCorrect ? 1 : 0);
+    const newWrongAnswers = questionsWrong + (isCorrect ? 0 : 1);
+    
+    // Update local state with new values
+    setAnsweredQuestionIds(new Set(newAnsweredQuestions));
+    setQuestionPoints(newTotalPoints);
+    setQuestionsCorrect(newCorrectAnswers);
+    setQuestionsWrong(newWrongAnswers);
+    
+    // Update database and localStorage
+    const userData = localStorage.getItem('current_user');
+    if (userData) {
+      try {
+        const user = JSON.parse(userData);
+        
+        // Prepare full question history object
+        const updatedQuestionHistory = {
+          answeredQuestions: newAnsweredQuestions,
+          totalPoints: newTotalPoints,
+          correctAnswers: newCorrectAnswers,
+          wrongAnswers: newWrongAnswers,
+        };
+        
+        // Update database with complete history (await to ensure it saves)
+        await updateQuestionHistory(user.username, updatedQuestionHistory);
+        console.log(`✅ Question ${currentQuestion.id} saved to database`);
+        
+        // Update player's score in database
+        await updatePlayer(user.username, {
+          totalScore: newTotalPoints,
+          highestScore: Math.max(newTotalPoints, user.highestScore || 0)
+        });
+        console.log(`✅ Score updated: ${newTotalPoints} points`);
+        
+        // Update localStorage
+        localStorage.setItem(
+          `questionHistory:${user.username}`,
+          JSON.stringify(updatedQuestionHistory)
+        );
+      } catch (error) {
+        console.error('Failed to update question history:', error);
+      }
+    }
+    
+    // Show explanation
+    setLastAnswer({
+      correct: isCorrect,
+      explanation: currentQuestion.explanation,
+    });
+    setShowExplanation(true);
+    
+    // Auto-proceed after 3 seconds
+    setTimeout(() => {
+      if (isCorrect) {
+        // Successful dodge!
+        addCombatLog(`✅ Correct! You dodge the attack completely! +${pointsChange} points`);
+      } else {
+        // Failed dodge - take damage
+        addCombatLog(`❌ Wrong answer! You fail to dodge!`);
+        executeEnemyAttack();
+      }
+      
+      // Reset defense state completely
+      setShowExplanation(false);
+      setCurrentQuestion(null);
+      setShuffledAnswers([]);
+      setIsDefending(false);
+      setCombatPhase('select-attack');
+    }, 3000);
+  };
+  
+  const executeSpecialAttack = (attack: SpecialAttack) => {
+    addCombatLog(`✨ You use ${attack.name}!`);
+    
+    // Trigger player attack animation
+    setPlayerAttacking(true);
+    setTimeout(() => setPlayerAttacking(false), 600);
+    
+    // Show sword clash
+    setTimeout(() => {
+      setShowSwordClash(true);
+      setTimeout(() => setShowSwordClash(false), 400);
+    }, 250);
+    
+    setTimeout(() => {
+      // Calculate damage: Base Attack + Special Attack Damage
+      const weaponBonus = equipment.weapon 
+        ? itemsData.find(i => i.id === equipment.weapon)?.stats?.attack || 0 
+        : 0;
+      const baseAttack = stats.attack + weaponBonus;
+      const specialDamage = attack.damage;
+      const totalDamage = baseAttack + specialDamage;
+      
+      // Apply variance (90-110%)
+      const variance = 0.9 + Math.random() * 0.2;
+      const actualDamage = Math.floor(totalDamage * variance);
+      
+      enemy.stats.hp -= actualDamage;
+      
+      // Trigger enemy hit animation
+      setEnemyHit(true);
+      showDamageNumber(actualDamage, false, false);
+      setTimeout(() => setEnemyHit(false), 500);
+      
+      addCombatLog(`${attack.description}`);
+      addCombatLog(`You deal ${actualDamage} damage to ${enemy.name}! (${baseAttack} base + ${specialDamage} special)`);
+      
+      // Apply special effects
+      if (attack.effect) {
+        if (attack.effect.type === 'heal') {
+          const healAmount = Math.min(attack.effect.value, stats.maxHp - stats.hp);
+          if (healAmount > 0) {
+            heal(healAmount);
+            addCombatLog(`💚 ${attack.effect.description}! Restored ${healAmount} HP!`);
+          }
+        } else if (attack.effect.type === 'debuff') {
+          setAttackDebuff(attack.effect.value);
+          addCombatLog(`💰 ${attack.effect.description}!`);
+        }
+      }
+      
+      // Check if new abilities should trigger
+      checkEnemyAbilities('hp-threshold');
+      
+      // Reset attack phase UI
+      setShowExplanation(false);
+      setCurrentQuestion(null);
+      setShuffledAnswers([]);
+      setSelectedAttack(null);
+      
+      // Check if enemy defeated
+      if (enemy.stats.hp <= 0) {
+        handleVictory();
+        return;
+      }
+      
+      // Enemy's turn
+      enemyAttack();
+    }, 300);
+  };
+  
+  const executeBasicAttack = () => {
+    addCombatLog('⚔️ You perform a basic attack!');
+    
+    // Trigger player attack animation
+    setPlayerAttacking(true);
+    setTimeout(() => setPlayerAttacking(false), 600);
+    
+    // Show sword clash
+    setTimeout(() => {
+      setShowSwordClash(true);
+      setTimeout(() => setShowSwordClash(false), 400);
+    }, 250);
+    
+    setTimeout(() => {
+      // Basic attack: 10-20 damage
+      const baseDamage = 10 + Math.floor(Math.random() * 11); // 10-20
+      const actualDamage = baseDamage;
+      
+      enemy.stats.hp -= actualDamage;
+      
+      // Trigger enemy hit animation
+      setEnemyHit(true);
+      showDamageNumber(actualDamage, false, false);
+      setTimeout(() => setEnemyHit(false), 500);
+      
+      addCombatLog(`You deal ${actualDamage} damage to ${enemy.name}!`);
+      
+      // Check if new abilities should trigger
+      checkEnemyAbilities('hp-threshold');
+      
+      // Check if enemy defeated
+      if (enemy.stats.hp <= 0) {
+        handleVictory();
+        return;
+      }
+      
+      // Enemy's turn
+      enemyAttack();
+    }, 300);
+  };
+  
+  const enemyAttack = () => {
+    // Check if manual defense is enabled
+    if (manualDefenseEnabled) {
+      // Get a random defense question
+      const categories: CategoryName[] = ['gst_basics', 'filing_deadline', 'input_tax', 'compliance', 'mira_services'];
+      const randomCategory = categories[Math.floor(Math.random() * categories.length)];
+      const defenseQuestion = getRandomQuestion(randomCategory);
+      
+      if (defenseQuestion) {
+        // Shuffle answers for defense question
+        const answersWithIndex = defenseQuestion.answers.map((answer, index) => ({
+          ...answer,
+          originalIndex: index
+        }));
+        
+        const shuffled = [...answersWithIndex];
+        for (let i = shuffled.length - 1; i > 0; i--) {
+          const j = Math.floor(Math.random() * (i + 1));
+          [shuffled[i], shuffled[j]] = [shuffled[j], shuffled[i]];
+        }
+        
+        setCurrentQuestion(defenseQuestion);
+        setShuffledAnswers(shuffled);
+        setIsDefending(true);
+        setCombatPhase('defend-question');
+        addCombatLog(`🛡️ ${enemy.name} attacks! Answer correctly to dodge!`);
+        return;
+      }
+    }
+    
+    // Normal enemy attack (no manual defense or no questions available)
+    executeEnemyAttack();
+  };
+  
+  const executeEnemyAttack = () => {
+    setTimeout(() => {
+      setEnemyAttacking(true);
+      setTimeout(() => setEnemyAttacking(false), 600);
+      
+      setTimeout(() => {
+        setShowSwordClash(true);
+        setTimeout(() => setShowSwordClash(false), 400);
+      }, 250);
+      
+      setTimeout(() => {
+        let enemyDamage = Math.max(1, (enemy.stats.attack + enemyBuffs.damageBoost - attackDebuff) - totalDefense);
+        const actualEnemyDamage = Math.floor(enemyDamage * (0.9 + Math.random() * 0.2));
+        
+        // Reset debuff after use
+        setAttackDebuff(0);
+        
+        takeDamage(actualEnemyDamage);
+        
+        setPlayerHit(true);
+        showDamageNumber(actualEnemyDamage, false, true);
+        setTimeout(() => setPlayerHit(false), 500);
+        
+        addCombatLog(`${enemy.name} deals ${actualEnemyDamage} damage to you!`);
+        
+        if (stats.hp - actualEnemyDamage <= 0) {
+          handleDefeat();
+          return;
+        }
+        
+        // Reset to attack selection for next turn
+        setCombatPhase('select-attack');
+        setSelectedAttack(null);
+        setCurrentQuestion(null);
+        setShuffledAnswers([]);
+        setShowExplanation(false);
+        setIsDefending(false);
+      }, 300);
+    }, 800);
+  };
+  
+  const handleVictory = () => {
+    addCombatLog(`${enemy.name} defeated!`);
+    
+    incrementEnemiesKilled();
+    recordEnemyDefeated(enemy.id);
+    
+    const rewardMultiplier = encounterState.rewardMultiplier || 1.0;
+    const baseXp = enemy.rewards.xp;
+    const baseGold = enemy.rewards.gold;
+    const xpReward = stats.level >= 10 ? 0 : Math.floor(baseXp * rewardMultiplier);
+    const goldReward = Math.floor(baseGold * rewardMultiplier);
+    
+    if (stats.level >= 10) {
+      addCombatLog(`You are at MAX LEVEL (10)! No more XP can be gained.`);
+      addCombatLog(`You gained ${goldReward} gold!`);
+    } else {
+      addCombatLog(`You gained ${xpReward} XP and ${goldReward} gold!`);
+    }
+    
+    gainXP(xpReward);
+    addGold(goldReward);
+    
+    const healAmount = stats.maxHp - stats.hp;
+    if (healAmount > 0) {
+      heal(healAmount);
+      addCombatLog(`You recovered ${healAmount} HP!`);
+    }
+    
+    const lootedItems: Array<{ itemId: string; quantity: number }> = [];
+    
+    enemy.rewards.items.forEach((loot: any) => {
+      if (Math.random() < (loot.chance || 1)) {
+        const itemData = itemsData.find(i => i.id === loot.id);
+        const itemName = itemData?.name || loot.id;
+        const rarity = itemData?.rarity;
+        
+        addItem(loot.id, 1);
+        lootedItems.push({ itemId: loot.id, quantity: 1 });
+        
+        if (rarity === 'legendary') {
+          addCombatLog(`⭐ LEGENDARY! You received ${itemName}! ⭐`);
+        } else if (rarity === 'epic') {
+          addCombatLog(`💜 EPIC! You received ${itemName}!`);
+        } else if (rarity === 'rare') {
+          addCombatLog(`💎 RARE! You received ${itemName}!`);
+        } else {
+          addCombatLog(`You received ${itemName}!`);
+        }
+      }
+    });
+    
+    const isBossFight = enemy.id === 'arim-dragon';
+    
+    if (isBossFight) {
+      // Calculate final score for ARIM victory
+      const finalScore = stats.gold + (stats.level * 1000) + (stats.xp);
+      
+      // Record game session with score and prize eligibility
+      const userData = localStorage.getItem('current_user');
+      if (userData) {
+        try {
+          const user = JSON.parse(userData);
+          recordSession(user.username, finalScore, true);
+          console.log(`🏆 ARIM DEFEATED! Score: ${finalScore}, Username: ${user.username}`);
+        } catch (error) {
+          console.error('Failed to record ARIM victory:', error);
+        }
+      }
+      
+      setBossVictoryData({
+        bossName: enemy.name,
+        xp: xpReward,
+        gold: goldReward,
+        items: lootedItems,
+      });
+      setShowBossVictoryModal(true);
+    } else {
+      // Record regular combat session
+      const regularScore = stats.gold + (stats.level * 100) + (stats.xp / 10);
+      const userData = localStorage.getItem('current_user');
+      if (userData) {
+        try {
+          const user = JSON.parse(userData);
+          recordSession(user.username, Math.floor(regularScore), false);
+        } catch (error) {
+          console.error('Failed to record combat session:', error);
+        }
+      }
+      
+      setBattleRewards({
+        xp: xpReward,
+        gold: goldReward,
+        items: lootedItems,
+        enemyName: enemy.name,
+      });
+      setShowRewardsModal(true);
+    }
+  };
+  
+  const handleDefeat = () => {
+    addCombatLog('💀 You have been defeated!');
+    
+    const xpLoss = Math.floor(stats.xpToNext * 0.1 * stats.level);
+    addCombatLog(`You lost ${xpLoss} XP and were returned to try again.`);
+    
+    setDefeatPenalty({
+      xpLost: xpLoss,
+      enemyName: enemy.name,
+    });
+    setShowDefeatModal(true);
+  };
+  
   
   // Helper function to show damage numbers
   const showDamageNumber = (damage: number, isCrit: boolean, isPlayer: boolean) => {
@@ -167,6 +728,7 @@ export const CombatView: React.FC = () => {
     }, 1000);
   };
   
+  // @ts-ignore - Legacy function kept for reference
   const handleAttack = () => {
     // Trigger player attack animation
     setPlayerAttacking(true);
@@ -388,6 +950,41 @@ export const CombatView: React.FC = () => {
               ⚔️ Combat!
             </h2>
             
+            {/* Quiz Score and Flee Button */}
+            <div className="flex justify-between items-center mb-2 bg-white/50 rounded-lg p-2 border border-teal-400 flex-wrap gap-2">
+              <div className="flex gap-4 text-sm flex-wrap">
+                <span className="font-bold text-green-700">✅ Correct: {questionsCorrect}</span>
+                <span className="font-bold text-red-700">❌ Wrong: {questionsWrong}</span>
+                <span className="font-bold text-blue-700">💎 Points: {questionPoints}</span>
+                <span className="font-bold text-purple-700">📊 Score: {questionsCorrect + questionsWrong > 0 ? Math.round((questionsCorrect / (questionsCorrect + questionsWrong)) * 100) : 0}%</span>
+              </div>
+              <div className="flex gap-2 items-center">
+                <label className="flex items-center gap-2 cursor-pointer bg-blue-50 hover:bg-blue-100 border-2 border-blue-500 rounded-lg px-3 py-1 transition-all">
+                  <input
+                    type="checkbox"
+                    checked={manualDefenseEnabled}
+                    onChange={(e) => setManualDefenseEnabled(e.target.checked)}
+                    className="w-4 h-4 cursor-pointer"
+                  />
+                  <span className="text-xs font-bold text-blue-700">🛡️ Manual Defense</span>
+                </label>
+                <button
+                  onClick={handleFlee}
+                  className="btn-secondary text-xs sm:text-sm py-1 px-3"
+                  disabled={stats.hp <= 0 || combatPhase === 'answer-question' || combatPhase === 'defend-question'}
+                >
+                  🏃 Flee
+                </button>
+              </div>
+            </div>
+            
+            {/* Manual Defense Explanation */}
+            {manualDefenseEnabled && (
+              <div className="mb-2 bg-blue-50 border-2 border-blue-500 rounded-lg p-2 text-xs text-blue-800">
+                <span className="font-bold">🛡️ Manual Defense Active:</span> When the enemy attacks, you'll get a question. Answer correctly to dodge and take no damage!
+              </div>
+            )}
+            
             {/* Main Combat Grid - 2 Columns */}
       <div className="grid grid-cols-2 gap-1.5 sm:gap-2 md:gap-3 relative mb-1">
         {/* SWORD CLASH IN CENTER */}
@@ -607,23 +1204,269 @@ export const CombatView: React.FC = () => {
         </div>
       </div>
       
-      {/* Action Buttons - Centered between columns */}
-      <div className="grid grid-cols-2 gap-1.5 sm:gap-2 mt-1 flex-shrink-0">
-        <button
-          onClick={handleAttack}
-          className="btn-primary text-xs sm:text-sm py-1.5 sm:py-2"
-          disabled={stats.hp <= 0}
-        >
-          ⚔️ Attack
-        </button>
-        <button
-          onClick={handleFlee}
-          className="btn-secondary text-xs sm:text-sm py-1.5 sm:py-2"
-          disabled={stats.hp <= 0}
-        >
-          🏃 Flee
-        </button>
-      </div>
+      {/* Action Section - Changes based on combat phase */}
+      {combatPhase === 'select-attack' && (
+        <div className="mt-2 flex-shrink-0">
+          <h3 className="font-medieval text-sm sm:text-base text-center text-teal-900 mb-2">
+            📚 Choose Your Attack Strategy
+          </h3>
+          <p className="text-xs text-center text-brown-700 mb-2">
+            Use a basic attack, or select a special attack and answer correctly!
+          </p>
+          
+          {/* Basic Attack Button - First Option */}
+          <div className="mb-3">
+            <button
+              onClick={() => executeBasicAttack()}
+              className="w-full bg-gradient-to-br from-teal-500 to-teal-600 hover:from-teal-600 hover:to-teal-700 border-2 border-teal-700 hover:border-teal-800 rounded-lg p-3 text-white font-semibold transition-all hover:shadow-xl shadow-md active:scale-95 disabled:opacity-50 disabled:cursor-not-allowed"
+              disabled={stats.hp <= 0}
+            >
+              <div className="flex items-center justify-center gap-2">
+                <span className="text-xl">⚔️</span>
+                <div>
+                  <div className="font-medieval text-sm">Basic Attack</div>
+                  <div className="text-xs text-teal-100">No question required • 10-20 damage</div>
+                </div>
+              </div>
+            </button>
+          </div>
+          
+          {/* Special Attacks - Require Questions */}
+          <div className="border-t border-teal-300 pt-3">
+            <p className="text-xs text-center text-purple-700 mb-2 font-bold">
+              ✨ Special Attacks (Answer question correctly to use)
+            </p>
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
+              {specialAttacks.map((attack) => {
+                // Check if questions are available for this category
+                const categoryData = (quizData.categories as any)[attack.category];
+                const availableQuestions = categoryData?.questions?.filter(
+                  (q: QuizQuestion) => !answeredQuestionIds.has(q.id)
+                ) || [];
+                const hasQuestions = availableQuestions.length > 0;
+                
+                // Calculate total damage preview
+                const weaponBonus = equipment.weapon 
+                  ? itemsData.find(i => i.id === equipment.weapon)?.stats?.attack || 0 
+                  : 0;
+                const baseAttack = stats.attack + weaponBonus;
+                const totalDamage = baseAttack + attack.damage;
+                
+                return (
+                <button
+                  key={attack.id}
+                  onClick={() => handleAttackSelection(attack)}
+                  className="bg-gradient-to-br from-purple-500 to-pink-500 hover:from-purple-600 hover:to-pink-600 border-2 border-purple-700 hover:border-purple-800 rounded-lg p-3 text-left transition-all hover:shadow-xl shadow-md active:scale-95 disabled:opacity-50 disabled:cursor-not-allowed"
+                  disabled={stats.hp <= 0 || !hasQuestions}
+                  title={!hasQuestions ? 'No more questions available in this category!' : ''}
+                >
+                  <div className="flex items-start gap-2">
+                    <span className="text-2xl">{attack.icon}</span>
+                    <div className="flex-1">
+                      <div className="font-medieval text-sm font-bold text-white">
+                        {attack.name}
+                      </div>
+                      <div className="text-xs text-purple-100 mt-1">
+                        💥 ~{Math.floor(totalDamage * 0.9)}-{Math.floor(totalDamage * 1.1)} damage ({baseAttack} + {attack.damage})
+                      </div>
+                      {attack.effect && (
+                        <div className="text-xs text-pink-100 mt-1">
+                          ✨ {attack.effect.description}
+                        </div>
+                      )}
+                      {!hasQuestions && (
+                        <div className="text-xs text-red-200 mt-1 font-bold">
+                          ⚠️ No questions left!
+                        </div>
+                      )}
+                      {hasQuestions && (
+                        <div className="text-xs text-green-200 mt-1">
+                          📝 {availableQuestions.length} questions left
+                        </div>
+                      )}
+                      <div className="text-xs text-purple-200 mt-1 italic">
+                        Category: {attack.category.replace('_', ' ')}
+                      </div>
+                    </div>
+                  </div>
+                </button>
+                );
+              })}
+            </div>
+          </div>
+          
+          <p className="text-xs text-center text-red-700 mt-2 font-bold">
+            ⚠️ Wrong answer = You miss your attack completely!
+          </p>
+        </div>
+      )}
+      
+      {combatPhase === 'answer-question' && currentQuestion && (
+        <div className="mt-2 flex-shrink-0">
+          <div className="bg-gradient-to-br from-yellow-50 to-orange-50 border-3 border-yellow-600 rounded-xl p-4 shadow-xl">
+            <div className="flex items-center justify-between mb-3">
+              <h3 className="font-medieval text-base sm:text-lg text-yellow-900">
+                📚 Tax Knowledge Challenge
+              </h3>
+              <span className="text-sm bg-yellow-200 px-3 py-1 rounded-full font-bold text-yellow-900">
+                {currentQuestion.category}
+              </span>
+            </div>
+            
+            {!showExplanation ? (
+              <>
+                <p className="font-body text-sm sm:text-base text-brown-900 mb-4 font-bold">
+                  {currentQuestion.question}
+                </p>
+                
+                <div className="space-y-2">
+                  {shuffledAnswers.map((answer, index) => (
+                    <button
+                      key={index}
+                      onClick={() => handleAnswerSelection(index)}
+                      className="w-full bg-white hover:bg-teal-50 border-2 border-yellow-500 hover:border-teal-600 rounded-lg p-3 text-left transition-all"
+                    >
+                      <span className="font-body text-sm text-brown-900">
+                        <span className="font-bold mr-2">{String.fromCharCode(65 + index)})</span>
+                        {answer.text}
+                      </span>
+                    </button>
+                  ))}
+                </div>
+                
+                <p className="text-xs text-center text-gray-600 mt-3 italic">
+                  💡 Tip: Take your time and think carefully!
+                </p>
+              </>
+            ) : (
+              <div className={`p-4 rounded-lg border-2 ${lastAnswer?.correct ? 'bg-green-50 border-green-600' : 'bg-red-50 border-red-600'}`}>
+                <div className="text-center mb-3">
+                  {lastAnswer?.correct ? (
+                    <div>
+                      <div className="text-4xl mb-2">✅</div>
+                      <div className="font-medieval text-xl text-green-900 font-bold">
+                        CORRECT!
+                      </div>
+                      <div className="text-sm text-green-800 mt-1">
+                        Special attack unlocked! 🎯
+                      </div>
+                    </div>
+                  ) : (
+                    <div>
+                      <div className="text-4xl mb-2">❌</div>
+                      <div className="font-medieval text-xl text-red-900 font-bold">
+                        WRONG ANSWER
+                      </div>
+                      <div className="text-sm text-red-800 mt-1">
+                        You miss your attack completely! 💨
+                      </div>
+                    </div>
+                  )}
+                </div>
+                
+                <div className="bg-white p-3 rounded-lg border-2 border-gray-300 mt-3">
+                  <div className="font-bold text-sm text-brown-900 mb-2">📖 Explanation:</div>
+                  <p className="text-xs text-brown-800">
+                    {lastAnswer?.explanation}
+                  </p>
+                </div>
+                
+                <div className="text-center mt-3 text-sm text-gray-700">
+                  {lastAnswer?.correct ? 'Executing attack in 3 seconds...' : 'Enemy\'s turn in 3 seconds...'}
+                </div>
+              </div>
+            )}
+          </div>
+        </div>
+      )}
+      
+      {/* Defense Question Phase */}
+      {combatPhase === 'defend-question' && currentQuestion && (
+        <div className="mt-2 flex-shrink-0">
+          <div className="bg-gradient-to-br from-blue-50 to-cyan-50 border-3 border-blue-600 rounded-xl p-4 shadow-xl">
+            <div className="flex items-center justify-between mb-3">
+              <h3 className="font-medieval text-base sm:text-lg text-blue-900">
+                🛡️ Defensive Challenge
+              </h3>
+              <span className="text-sm bg-blue-200 px-3 py-1 rounded-full font-bold text-blue-900">
+                {currentQuestion.category}
+              </span>
+            </div>
+            
+            {!showExplanation ? (
+              <>
+                <div className="bg-orange-100 border-2 border-orange-500 rounded-lg p-3 mb-3">
+                  <p className="text-sm font-bold text-orange-800 text-center">
+                    ⚠️ Enemy is attacking! Answer correctly to dodge!
+                  </p>
+                </div>
+                
+                <p className="font-body text-sm sm:text-base text-brown-900 mb-4 font-bold">
+                  {currentQuestion.question}
+                </p>
+                
+                <div className="space-y-2">
+                  {shuffledAnswers.map((answer, index) => (
+                    <button
+                      key={index}
+                      onClick={() => handleAnswerSelection(index)}
+                      className="w-full bg-white hover:bg-blue-50 border-2 border-blue-500 hover:border-blue-600 rounded-lg p-3 text-left transition-all"
+                    >
+                      <span className="font-body text-sm text-brown-900">
+                        <span className="font-bold mr-2">{String.fromCharCode(65 + index)})</span>
+                        {answer.text}
+                      </span>
+                    </button>
+                  ))}
+                </div>
+                
+                <p className="text-xs text-center text-gray-600 mt-3 italic">
+                  💡 Tip: Correct answer = No damage taken!
+                </p>
+              </>
+            ) : (
+              <div className={`p-4 rounded-lg border-2 ${lastAnswer?.correct ? 'bg-green-50 border-green-600' : 'bg-red-50 border-red-600'}`}>
+                <div className="text-center mb-3">
+                  {lastAnswer?.correct ? (
+                    <div>
+                      <div className="text-4xl mb-2">🛡️</div>
+                      <div className="font-medieval text-xl text-green-900 font-bold">
+                        DODGE SUCCESS!
+                      </div>
+                      <div className="text-sm text-green-800 mt-1">
+                        You evade the attack completely! 💨
+                      </div>
+                    </div>
+                  ) : (
+                    <div>
+                      <div className="text-4xl mb-2">💥</div>
+                      <div className="font-medieval text-xl text-red-900 font-bold">
+                        DODGE FAILED
+                      </div>
+                      <div className="text-sm text-red-800 mt-1">
+                        You get hit by the attack!
+                      </div>
+                    </div>
+                  )}
+                </div>
+                
+                <div className="bg-white p-3 rounded-lg border-2 border-gray-300 mt-3">
+                  <div className="font-bold text-sm text-brown-900 mb-2">📖 Explanation:</div>
+                  <p className="text-xs text-brown-800">
+                    {lastAnswer?.explanation}
+                  </p>
+                </div>
+                
+                <div className="text-center mt-3 text-sm text-gray-700">
+                  {lastAnswer?.correct ? 'Continuing combat in 3 seconds...' : 'Taking damage in 3 seconds...'}
+                </div>
+              </div>
+            )}
+          </div>
+        </div>
+      )}
+      
+      {/* Old Action Buttons - Removed as attacks are now quiz-based */}
       
       {/* Consumables Section - Compact */}
       {(() => {

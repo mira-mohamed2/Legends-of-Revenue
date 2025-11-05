@@ -1,19 +1,19 @@
 import React from 'react';
 import { usePlayerStore } from '../state/playerStore';
-import { useSessionStore } from '../state/sessionStore';
 import { useWorldStore } from '../state/worldStore';
-import CharacterManager from './CharacterManager';
+import { type Player } from '../utils/database';
 
-export type MenuOption = 'home' | 'map' | 'character' | 'market' | 'players' | 'classes';
+export type MenuOption = 'home' | 'map' | 'character' | 'market' | 'leaderboard' | 'players' | 'classes';
 
 interface MenuBarProps {
   activeView: MenuOption;
   onNavigate: (view: MenuOption) => void;
+  onNewPlayer: () => Promise<void>;
+  currentUser: Player;
 }
 
-export const MenuBar: React.FC<MenuBarProps> = ({ activeView, onNavigate }) => {
+export const MenuBar: React.FC<MenuBarProps> = ({ activeView, onNavigate, onNewPlayer, currentUser }) => {
   const { stats, savePlayer } = usePlayerStore();
-  const { currentUser, logout } = useSessionStore();
   const { saveWorld } = useWorldStore();
   
   const menuItems = [
@@ -21,6 +21,7 @@ export const MenuBar: React.FC<MenuBarProps> = ({ activeView, onNavigate }) => {
     { id: 'map' as MenuOption, label: 'Map', icon: '🗺️', available: true },
     { id: 'character' as MenuOption, label: 'Character', icon: '👤', available: true },
     { id: 'market' as MenuOption, label: 'Market', icon: '🏪', available: true },
+    { id: 'leaderboard' as MenuOption, label: 'Leaderboard', icon: '🏆', available: true },
     { id: 'players' as MenuOption, label: 'Players', icon: '👥', available: false }, // Coming soon
     { id: 'classes' as MenuOption, label: 'Classes', icon: '⚔️', available: false }, // Coming soon
   ];
@@ -54,7 +55,7 @@ export const MenuBar: React.FC<MenuBarProps> = ({ activeView, onNavigate }) => {
             <div className="flex items-center gap-0.5 bg-white px-1.5 py-1 sm:px-2.5 sm:py-1.5 rounded-md border-2 border-teal-600 shadow-sm flex-shrink-0 min-h-[36px]">
               <span className="text-teal-700 hidden min-[480px]:inline text-sm">👤</span>
               <span className="font-bold text-teal-900 truncate max-w-[50px] min-[480px]:max-w-[80px] sm:max-w-none">
-                {currentUser || 'Agent'}
+                {currentUser.username}
               </span>
             </div>
             <div className="flex items-center gap-0.5 bg-white px-1.5 py-1 sm:px-2.5 sm:py-1.5 rounded-md border-2 border-purple-600 shadow-sm flex-shrink-0 min-h-[36px]">
@@ -73,23 +74,17 @@ export const MenuBar: React.FC<MenuBarProps> = ({ activeView, onNavigate }) => {
           
           {/* Actions - Right Side */}
           <div className="flex items-center gap-1 flex-shrink-0">
-            {/* Character Manager Button */}
-            <CharacterManager />
-            
             {/* Logout - Icon only on mobile */}
             <button
               className="px-2 sm:px-3 py-2 rounded-md bg-gradient-to-br from-red-500 to-red-600 text-white hover:from-red-600 hover:to-red-700 font-body text-xs font-semibold transition-all duration-300 hover:shadow-lg active:scale-95 border-2 border-red-700 min-h-[36px] min-w-[36px]"
-              onClick={() => {
-                if (confirm('Logout? Your progress will be saved automatically.')) {
-                  // Save player data and world state before logout
+              onClick={async () => {
+                if (confirm('Logout and save your progress?\n\n✅ Save your current score to CSV\n✅ Return to login screen\n\nContinue?')) {
+                  // Save player data
                   savePlayer();
                   saveWorld();
                   
-                  // Clear session
-                  logout();
-                  
-                  // Reload to show login screen
-                  window.location.reload();
+                  // Auto-save CSV and clear session
+                  await onNewPlayer();
                 }
               }}
               title="Logout"

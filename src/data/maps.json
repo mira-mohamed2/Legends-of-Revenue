@@ -4,7 +4,7 @@
     "name": "MIRA Headquarters",
     "type": "hub",
     "description": "The central office of the Maldives Inland Revenue Authority. Revenue agents gather here to receive assignments and report their findings.",
-    "neighbors": ["merchants-row", "city-gates"],
+    "neighbors": ["merchants-row", "city-gates", "miras-palace"],
     "encounterRate": 0,
     "encounterTable": [],
     "questHooks": ["welcome-quest"]
@@ -142,7 +142,7 @@
     "name": "Dragon's Lair - ARIM's Domain",
     "type": "dungeon",
     "description": "The legendary lair of ARIM the Dragon, the ultimate embodiment of tax evasion. Mountains of hoarded gold glitter in the darkness. Only the strongest MIRA agents dare enter this domain.",
-    "neighbors": ["tax-collectors-office", "underground-vault"],
+    "neighbors": ["guild-hall", "tax-collectors-office", "underground-vault"],
     "encounterRate": 1.0,
     "encounterTable": [
       { "enemyId": "arim-dragon", "weight": 10 }

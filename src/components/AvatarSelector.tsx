@@ -7,9 +7,11 @@ export const AvatarSelector: React.FC = () => {
   const fileInputRef = useRef<HTMLInputElement>(null);
   
   const defaultAvatars = [
-    { id: 'rogue', name: 'Rogue', path: '/images/avatars/rogue.svg' },
+    { id: 'male-agent', name: 'Male Agent', path: '/images/avatars/male-ta-default.jpg' },
+    { id: 'female-agent', name: 'Female Agent', path: '/images/avatars/female-ta-default.jpg' },
     { id: 'warrior', name: 'Warrior', path: '/images/avatars/warrior.svg' },
     { id: 'mage', name: 'Mage', path: '/images/avatars/mage.svg' },
+    { id: 'rogue', name: 'Rogue', path: '/images/avatars/rogue.svg' },
     { id: 'healer', name: 'Healer', path: '/images/avatars/healer.svg' },
   ];
   
@@ -24,9 +26,9 @@ export const AvatarSelector: React.FC = () => {
         return;
       }
       
-      // Check file size (max 2MB)
-      if (file.size > 2 * 1024 * 1024) {
-        alert('Image size must be less than 2MB');
+      // REDUCED: 500KB limit (was 2MB) for safer LocalStorage usage on GitHub Pages
+      if (file.size > 500 * 1024) {
+        alert('Image size must be less than 500KB. Please resize your image or use a default avatar.');
         return;
       }
       
@@ -34,9 +36,39 @@ export const AvatarSelector: React.FC = () => {
       const reader = new FileReader();
       reader.onload = (e) => {
         const result = e.target?.result as string;
-        setCustomAvatar(result);
-        setIsOpen(false);
+        
+        // Check base64 size (adds ~33% overhead)
+        const base64Size = result.length;
+        const estimatedKB = Math.round(base64Size / 1024);
+        
+        // Warn if > 700KB after encoding
+        if (base64Size > 700 * 1024) {
+          alert(`Encoded image is ${estimatedKB}KB. This may cause storage issues. Please use a smaller image.`);
+          return;
+        }
+        
+        // Try to save with error handling for quota exceeded
+        try {
+          setCustomAvatar(result);
+          setIsOpen(false);
+        } catch (error: any) {
+          // Check if it's a quota error
+          if (error.name === 'QuotaExceededError' || 
+              error.code === 22 || 
+              error.code === 1014) {
+            alert('Storage quota exceeded! Please:\n1. Use a smaller image\n2. Clear browser data\n3. Use a default avatar instead');
+            console.error('LocalStorage quota exceeded:', error);
+          } else {
+            alert('Failed to save avatar. Please try a different image.');
+            console.error('Avatar save error:', error);
+          }
+        }
       };
+      
+      reader.onerror = () => {
+        alert('Failed to read image file. Please try again.');
+      };
+      
       reader.readAsDataURL(file);
     }
   };
@@ -70,7 +102,7 @@ export const AvatarSelector: React.FC = () => {
             <button
               onClick={() => {
                 setCustomAvatar(null);
-                setAvatar('/images/avatars/rogue.svg');
+                setAvatar('/images/avatars/male-ta-default.jpg');
               }}
               className="btn-secondary block w-full text-sm"
             >
@@ -97,7 +129,7 @@ export const AvatarSelector: React.FC = () => {
             {/* Default Avatars */}
             <div className="mb-6">
               <h4 className="font-medieval text-lg text-brown mb-3">Default Avatars</h4>
-              <div className="grid grid-cols-2 sm:grid-cols-4 gap-4">
+              <div className="grid grid-cols-2 sm:grid-cols-3 gap-4">
                 {defaultAvatars.map((av) => (
                   <button
                     key={av.id}
@@ -111,7 +143,7 @@ export const AvatarSelector: React.FC = () => {
                     <img 
                       src={av.path} 
                       alt={av.name}
-                      className="w-full h-24 object-contain mb-2"
+                      className="w-full h-24 object-cover rounded mb-2"
                     />
                     <p className="font-body text-sm text-brown text-center">{av.name}</p>
                   </button>
@@ -138,7 +170,7 @@ export const AvatarSelector: React.FC = () => {
                   📁 Choose Image File
                 </label>
                 <p className="font-body text-sm text-brown-600 mt-2">
-                  Supports: JPG, PNG, GIF, SVG (Max 2MB)
+                  Supports: JPG, PNG, GIF, SVG (Max 500KB for optimal performance)
                 </p>
                 {customAvatar && (
                   <p className="font-body text-sm text-green-600 mt-2">
