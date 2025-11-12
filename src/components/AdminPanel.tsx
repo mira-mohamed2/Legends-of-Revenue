@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { getAllPlayers, exportToCSV, clearAllData, getStatistics, importFromJSONFile, type Player } from '../utils/database';
+import { getAllPlayers, exportToCSV, clearAllData, getStatistics, importFromJSONFiles, type Player } from '../utils/database';
 
 export const AdminPanel: React.FC = () => {
   const [isOpen, setIsOpen] = useState(false);
@@ -58,8 +58,12 @@ export const AdminPanel: React.FC = () => {
 
   const handleExportJSON = async () => {
     try {
-      await exportToCSV(); // Note: This now exports JSON
-      alert('✅ JSON file saved successfully!');
+      await exportToCSV(); // Creates BOTH: expo_data.json + expo_data_TIMESTAMP.json
+      alert('✅ TWO JSON files saved to Downloads!\n\n' +
+            '1️⃣ expo_data.json (fixed name)\n' +
+            '2️⃣ expo_data_TIMESTAMP.json (timestamped backup)\n\n' +
+            '📌 IMPORTANT: To sync data across browsers/sessions:\n' +
+            '   Copy expo_data.json to /public/ folder and refresh the app');
     } catch (error) {
       console.error('Failed to save JSON:', error);
       alert('❌ Failed to save JSON file. Please try again.');
@@ -68,27 +72,29 @@ export const AdminPanel: React.FC = () => {
 
   const handleImportJSON = async () => {
     try {
-      // Create file input element
+      // Create file input element with multiple file support
       const input = document.createElement('input');
       input.type = 'file';
       input.accept = '.json,application/json';
+      input.multiple = true; // Allow multiple file selection
       
       input.onchange = async (e) => {
-        const file = (e.target as HTMLInputElement).files?.[0];
-        if (!file) return;
+        const files = (e.target as HTMLInputElement).files;
+        if (!files || files.length === 0) return;
         
         try {
-          const result = await importFromJSONFile(file);
+          const result = await importFromJSONFiles(files);
           
           let message = `✅ Import Complete!\n\n`;
-          message += `📥 Imported/Updated: ${result.imported} players\n`;
-          if (result.skipped > 0) {
-            message += `⚠️ Skipped: ${result.skipped} players\n`;
-          }
+          message += `� Processed ${files.length} file(s)\n`;
+          message += `✅ ${result.imported} new players imported\n`;
+          message += `🔄 ${result.updated} players updated (higher scores)\n`;
+          message += `⏭️ ${result.skipped} skipped (lower/same scores)\n`;
+          
           if (result.errors.length > 0) {
-            message += `\nErrors:\n${result.errors.slice(0, 5).join('\n')}`;
-            if (result.errors.length > 5) {
-              message += `\n... and ${result.errors.length - 5} more`;
+            message += `\n❌ Errors:\n${result.errors.slice(0, 3).join('\n')}`;
+            if (result.errors.length > 3) {
+              message += `\n... and ${result.errors.length - 3} more`;
             }
           }
           
@@ -198,6 +204,33 @@ export const AdminPanel: React.FC = () => {
           <div className="bg-gray-700 p-4 rounded-lg">
             <p className="text-gray-400 text-sm">Highest Score</p>
             <p className="text-3xl font-bold text-green-400">{highestScore}</p>
+          </div>
+        </div>
+
+        {/* Data Sync Instructions */}
+        <div className="bg-blue-900 border-2 border-blue-500 rounded-lg p-4 mb-4">
+          <h3 className="text-blue-200 font-bold mb-2 flex items-center gap-2">
+            <span>ℹ️</span> Data Import & Sync Workflow
+          </h3>
+          <div className="text-blue-100 text-sm space-y-2">
+            <p><strong>📤 On Logout:</strong> Timestamped backup downloads to Downloads folder</p>
+            <ul className="list-disc ml-6 space-y-1">
+              <li><code className="bg-blue-800 px-1 rounded">expo_data_YYYY-MM-DD_HH-MM-SS.json</code> - Timestamped backup</li>
+            </ul>
+            <p><strong>📥 Multi-File Import (Smart Merge):</strong></p>
+            <ul className="list-disc ml-6 space-y-1">
+              <li>Select multiple JSON files at once</li>
+              <li>Automatically deduplicates by username + phone</li>
+              <li>Keeps highest score for duplicates</li>
+              <li>Only updates database if imported score is higher</li>
+            </ul>
+            <p><strong>🔄 To Sync Across Browsers/Sessions:</strong></p>
+            <ul className="list-disc ml-6 space-y-1">
+              <li>Collect timestamped backups from all browsers/sessions</li>
+              <li>Use Import button to select all files at once</li>
+              <li>System will merge and keep best scores automatically</li>
+            </ul>
+            <p className="text-blue-300 mt-2">💡 <strong>Tip:</strong> Import shows detailed stats (new, updated, skipped)</p>
           </div>
         </div>
 

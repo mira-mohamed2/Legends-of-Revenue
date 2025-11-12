@@ -70,6 +70,11 @@ export default function LoginRegistrationForm({ onSuccess }: LoginRegistrationFo
       // Success! Welcome back
       console.log('✅ Login successful:', user.username);
       console.log('📦 User data:', user);
+      
+      // Set global username for auto-save functionality
+      (window as any).__currentUsername = user.username;
+      console.log('🔑 Set current username for auto-save');
+      
       onSuccess(user);
     } else {
       console.log('❌ User not found in Dexie database');
@@ -168,6 +173,11 @@ export default function LoginRegistrationForm({ onSuccess }: LoginRegistrationFo
     try {
       await addPlayer(newUser);
       console.log('✅ Registration successful:', newUser.username);
+      
+      // Set global username for auto-save functionality
+      (window as any).__currentUsername = newUser.username;
+      console.log('🔑 Set current username for auto-save');
+      
       onSuccess(newUser);
     } catch (error) {
       console.error('Registration failed:', error);

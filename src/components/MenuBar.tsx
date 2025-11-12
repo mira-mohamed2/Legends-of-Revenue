@@ -3,7 +3,7 @@ import { usePlayerStore } from '../state/playerStore';
 import { useWorldStore } from '../state/worldStore';
 import { type Player } from '../utils/database';
 
-export type MenuOption = 'home' | 'map' | 'character' | 'market' | 'leaderboard' | 'players' | 'classes';
+export type MenuOption = 'home' | 'howtoplay' | 'map' | 'character' | 'market' | 'leaderboard' | 'players' | 'classes';
 
 interface MenuBarProps {
   activeView: MenuOption;
@@ -18,6 +18,7 @@ export const MenuBar: React.FC<MenuBarProps> = ({ activeView, onNavigate, onNewP
   
   const menuItems = [
     { id: 'home' as MenuOption, label: 'Home', icon: '🏛️', available: true },
+    { id: 'howtoplay' as MenuOption, label: 'How to Play', icon: '📚', available: true },
     { id: 'map' as MenuOption, label: 'Map', icon: '🗺️', available: true },
     { id: 'character' as MenuOption, label: 'Character', icon: '👤', available: true },
     { id: 'market' as MenuOption, label: 'Market', icon: '🏪', available: true },
@@ -78,7 +79,7 @@ export const MenuBar: React.FC<MenuBarProps> = ({ activeView, onNavigate, onNewP
             <button
               className="px-2 sm:px-3 py-2 rounded-md bg-gradient-to-br from-red-500 to-red-600 text-white hover:from-red-600 hover:to-red-700 font-body text-xs font-semibold transition-all duration-300 hover:shadow-lg active:scale-95 border-2 border-red-700 min-h-[36px] min-w-[36px]"
               onClick={async () => {
-                if (confirm('Logout and save your progress?\n\n✅ Save your current score to CSV\n✅ Return to login screen\n\nContinue?')) {
+                if (confirm('Logout and save your progress?\n\n✅ Timestamped JSON backup will be saved\n✅ Data saved to browser storage\n✅ Return to login screen\n\nContinue?')) {
                   // Save player data
                   savePlayer();
                   saveWorld();

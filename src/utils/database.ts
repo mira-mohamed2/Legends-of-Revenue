@@ -91,38 +91,33 @@ class ExpoDatabase extends Dexie {
 export const db = new ExpoDatabase();
 
 /**
- * Load JSON and import to Dexie
+ * Load JSON and import to Dexie (BACKUP ONLY - does not clear existing data)
+ * Only used for manual imports via Admin Panel
  */
 export async function loadFromJSON(): Promise<boolean> {
   try {
-    console.log('📂 Loading JSON from /expo_data.json...');
+    console.log('📂 Checking for backup JSON at /expo_data.json...');
     
     const response = await fetch('/expo_data.json');
     
     if (!response.ok) {
-      console.log('ℹ️ No existing JSON file, starting fresh');
+      console.log('ℹ️ No backup JSON file found - using Dexie database only');
       return true;
     }
 
     const data = await response.json();
     
     if (!data.players || !Array.isArray(data.players)) {
-      console.log('ℹ️ Invalid JSON format, starting fresh');
+      console.log('ℹ️ Invalid JSON format in backup file');
       return true;
     }
 
-    // Clear existing data
-    await db.players.clear();
-
-    // Import to Dexie
-    if (data.players.length > 0) {
-      await db.players.bulkAdd(data.players);
-      console.log(`✅ Imported ${data.players.length} players from JSON to Dexie`);
-    }
+    console.log(`ℹ️ Found backup JSON with ${data.players.length} players (not auto-importing)`);
+    console.log('💡 Use Admin Panel Import to restore from backup if needed');
 
     return true;
   } catch (error) {
-    console.error('❌ Failed to load JSON:', error);
+    console.error('❌ Failed to check backup JSON:', error);
     return false;
   }
 }
@@ -131,7 +126,7 @@ export async function loadFromJSON(): Promise<boolean> {
 export const loadFromCSV = loadFromJSON;
 
 /**
- * Export Dexie to JSON
+ * Export Dexie to JSON (with timestamp)
  */
 export async function exportToJSON(): Promise<void> {
   try {
@@ -149,11 +144,19 @@ export async function exportToJSON(): Promise<void> {
     
     const jsonString = JSON.stringify(jsonData, null, 2); // Pretty print with 2 spaces
     
+    // Generate filename with timestamp
+    const now = new Date();
+    const timestamp = now.toISOString()
+      .replace(/:/g, '-')  // Replace colons with dashes
+      .replace(/\..+/, '') // Remove milliseconds
+      .replace('T', '_');  // Replace T with underscore
+    const filename = `expo_data_${timestamp}.json`;
+    
     // Try File System Access API (Chrome/Edge)
     if ('showSaveFilePicker' in window) {
       try {
         const handle = await (window as any).showSaveFilePicker({
-          suggestedName: 'expo_data.json',
+          suggestedName: filename,
           types: [{
             description: 'JSON Files',
             accept: { 'application/json': ['.json'] }
@@ -164,7 +167,7 @@ export async function exportToJSON(): Promise<void> {
         await writable.write(jsonString);
         await writable.close();
         
-        console.log('✅ JSON saved successfully');
+        console.log(`✅ JSON saved successfully as ${filename}`);
         return;
       } catch (e) {
         if ((e as Error).name !== 'AbortError') {
@@ -178,11 +181,52 @@ export async function exportToJSON(): Promise<void> {
     const url = URL.createObjectURL(blob);
     const a = document.createElement('a');
     a.href = url;
-    a.download = 'expo_data.json';
+    a.download = filename;
     a.click();
     URL.revokeObjectURL(url);
     
-    console.log('✅ JSON downloaded to Downloads folder');
+    console.log(`✅ JSON downloaded to Downloads folder as ${filename}`);
+  } catch (error) {
+    console.error('❌ Failed to export JSON:', error);
+    throw error;
+  }
+}
+
+/**
+ * Export to timestamped JSON file (used for logout backups)
+ */
+export async function exportBothJSONFiles(): Promise<void> {
+  try {
+    console.log('💾 Exporting timestamped JSON backup...');
+    
+    const players = await db.players.toArray();
+    const jsonData = {
+      version: '1.0',
+      exportedAt: new Date().toISOString(),
+      players: players.map(player => ({
+        ...player,
+        id: undefined, // Don't export auto-increment ID
+      })),
+    };
+    
+    const jsonString = JSON.stringify(jsonData, null, 2);
+    const blob = new Blob([jsonString], { type: 'application/json' });
+    
+    // Generate timestamp for backup file
+    const now = new Date();
+    const timestamp = now.toISOString()
+      .replace(/:/g, '-')
+      .replace(/\..+/, '')
+      .replace('T', '_');
+    
+    // Download timestamped backup to Downloads folder
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = `expo_data_${timestamp}.json`;
+    a.click();
+    URL.revokeObjectURL(url);
+    console.log(`✅ Timestamped backup saved: expo_data_${timestamp}.json`);
   } catch (error) {
     console.error('❌ Failed to export JSON:', error);
     throw error;
@@ -190,65 +234,139 @@ export async function exportToJSON(): Promise<void> {
 }
 
 // Backward compatibility - keep old function name
-export const exportToCSV = exportToJSON;
+export const exportToCSV = exportBothJSONFiles;
 
 /**
- * Import JSON file and merge with existing database
+ * Import multiple JSON files and merge with existing database
+ * Smart merging: keeps highest score for each username + phone combination
  */
-export async function importFromJSONFile(file: File): Promise<{ imported: number; skipped: number; errors: string[] }> {
+export async function importFromJSONFiles(files: FileList): Promise<{ imported: number; updated: number; skipped: number; errors: string[] }> {
   try {
-    console.log('📥 Importing JSON file...');
-    
-    const fileText = await file.text();
-    const jsonData = JSON.parse(fileText);
-    
-    if (!jsonData.players || !Array.isArray(jsonData.players)) {
-      throw new Error('Invalid JSON format: missing players array');
-    }
+    console.log(`📥 Importing ${files.length} JSON file(s)...`);
     
     const errors: string[] = [];
     let imported = 0;
+    let updated = 0;
     let skipped = 0;
     
-    // Process each player
-    for (const playerData of jsonData.players) {
+    // Collect all players from all files
+    const allPlayers: any[] = [];
+    
+    // Read all files
+    for (let i = 0; i < files.length; i++) {
+      const file = files[i];
       try {
-        // Check if player already exists by username
+        const fileText = await file.text();
+        const jsonData = JSON.parse(fileText);
+        
+        if (!jsonData.players || !Array.isArray(jsonData.players)) {
+          errors.push(`${file.name}: Invalid JSON format - missing players array`);
+          continue;
+        }
+        
+        allPlayers.push(...jsonData.players);
+        console.log(`✅ Read ${jsonData.players.length} players from ${file.name}`);
+      } catch (error) {
+        errors.push(`${file.name}: Failed to parse - ${error}`);
+        console.error(`❌ Error reading ${file.name}:`, error);
+      }
+    }
+    
+    // Group players by username+phone (to find duplicates and keep highest score)
+    const playerMap = new Map<string, any>();
+    
+    for (const playerData of allPlayers) {
+      const key = `${playerData.username.toLowerCase()}|${playerData.phoneNumber}`;
+      const existing = playerMap.get(key);
+      
+      if (existing) {
+        // Keep the one with highest score
+        const existingScore = existing.totalScore || 0;
+        const newScore = playerData.totalScore || 0;
+        
+        if (newScore > existingScore) {
+          playerMap.set(key, playerData);
+          console.log(`🔄 Replacing ${playerData.username} - higher score: ${newScore} > ${existingScore}`);
+        } else {
+          console.log(`⏭️ Keeping existing ${playerData.username} - higher score: ${existingScore} >= ${newScore}`);
+        }
+      } else {
+        playerMap.set(key, playerData);
+      }
+    }
+    
+    console.log(`📊 Merged down to ${playerMap.size} unique players (by username + phone)`);
+    
+    // Now process each unique player
+    for (const playerData of playerMap.values()) {
+      try {
+        // Check if player already exists in database by username AND phone
+        const cleanPhone = playerData.phoneNumber.replace(/\s+/g, '');
         const existing = await db.players
           .where('username')
           .equalsIgnoreCase(playerData.username)
+          .and(p => p.phoneNumber.replace(/\s+/g, '') === cleanPhone)
           .first();
         
         if (existing) {
-          // Update existing player
-          await db.players.update(existing.id!, {
-            ...playerData,
-            id: existing.id, // Keep the existing ID
-          });
-          imported++;
-          console.log(`✅ Updated player: ${playerData.username}`);
+          // Compare scores - only update if imported score is higher
+          const existingScore = existing.totalScore || 0;
+          const importScore = playerData.totalScore || 0;
+          
+          if (importScore > existingScore) {
+            await db.players.update(existing.id!, {
+              ...playerData,
+              id: existing.id, // Keep the existing ID
+            });
+            updated++;
+            console.log(`✅ Updated ${playerData.username} - new score: ${importScore} (was ${existingScore})`);
+          } else {
+            skipped++;
+            console.log(`⏭️ Skipped ${playerData.username} - current score ${existingScore} >= import score ${importScore}`);
+          }
         } else {
-          // Add new player
+          // New player - add to database
           await db.players.add({
             ...playerData,
             id: undefined, // Let Dexie auto-generate ID
           });
           imported++;
-          console.log(`✅ Imported new player: ${playerData.username}`);
+          console.log(`✅ Imported new player: ${playerData.username} (score: ${playerData.totalScore || 0})`);
         }
       } catch (error) {
         skipped++;
-        errors.push(`Failed to import ${playerData.username}: ${error}`);
-        console.error(`❌ Error importing ${playerData.username}:`, error);
+        errors.push(`Failed to process ${playerData.username}: ${error}`);
+        console.error(`❌ Error processing ${playerData.username}:`, error);
       }
     }
     
-    console.log(`✅ Import complete: ${imported} imported, ${skipped} skipped`);
-    return { imported, skipped, errors };
+    console.log(`✅ Import complete: ${imported} new, ${updated} updated, ${skipped} skipped`);
+    return { imported, updated, skipped, errors };
   } catch (error) {
-    console.error('❌ Failed to import JSON:', error);
+    console.error('❌ Failed to import JSON files:', error);
     throw error;
   }
+}
+
+/**
+ * Import single JSON file (for backward compatibility)
+ */
+export async function importFromJSONFile(file: File): Promise<{ imported: number; skipped: number; errors: string[] }> {
+  // Create a proper FileList-like array
+  const files = [file];
+  const fileList = {
+    ...files,
+    length: 1,
+    item: (index: number) => files[index] || null,
+    [Symbol.iterator]: function* () { yield* files; }
+  } as unknown as FileList;
+  
+  const result = await importFromJSONFiles(fileList);
+  return {
+    imported: result.imported + result.updated,
+    skipped: result.skipped,
+    errors: result.errors
+  };
 }
 
 /**

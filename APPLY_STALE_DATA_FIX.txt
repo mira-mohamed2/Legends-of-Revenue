@@ -1,0 +1,110 @@
+======================================================================
+CRITICAL FIX: Replace Stale Data Loading in App.tsx
+======================================================================
+
+PROBLEM: App.tsx loads from user.characterData which is STALE (old snapshot from login).
+SOLUTION: Load from LIVE storage keys instead.
+
+======================================================================
+FIX #1: Replace lines 44-107 in src/App.tsx
+======================================================================
+
+FIND THIS BLOCK (starting at line 44):
+----------------------------------------
+          // Restore character data if available
+          if (user.characterData) {
+            usePlayerStore.setState({
+... (all the way down to) ...
+            console.log(`✅ Restored character data for ${user.username}`);
+          }
+
+REPLACE WITH:
+----------------------------------------
+          // ⚠️ CRITICAL: Load from LIVE storage keys instead of stale user.characterData
+          console.log(`🔄 Loading LIVE data for ${user.username}...`);
+          
+          // Load player data from live storage
+          const playerLoaded = usePlayerStore.getState().loadPlayer(user.username);
+          console.log(playerLoaded ? `✅ Loaded player data` : `🆕 New character`);
+          
+          // Load world state from live storage
+          const worldLoaded = useWorldStore.getState().loadWorld(user.username);
+          if (!worldLoaded) {
+            useWorldStore.getState().resetWorld();
+          }
+          console.log(worldLoaded ? `✅ Loaded world state` : `🗺️ New world`);
+          
+          // Load quest state from live storage
+          const questLoaded = useQuestStore.getState().loadQuests(user.username);
+          console.log(questLoaded ? `✅ Loaded quests` : `📜 New quests`);
+          
+          // Load achievements from live storage
+          useAchievementStore.getState().loadAchievements(user.username);
+          console.log(`✅ Loaded achievements`);
+          
+          console.log(`✅ All data loaded from LIVE storage keys`);
+
+======================================================================
+FIX #2: Replace lines 217-270 in src/App.tsx (Login Handler)
+======================================================================
+
+FIND THIS BLOCK (starting at line 217):
+----------------------------------------
+            // If user has character data, restore it
+            if (user.characterData) {
+... (all the way down to) ...
+              console.log('🗺️ New world state (new character)');
+            }
+
+REPLACE WITH:
+----------------------------------------
+            // ⚠️ CRITICAL: Load from LIVE storage keys instead of stale user.characterData
+            console.log(`🔄 Loading character data for ${user.username}...`);
+            
+            // Load player data
+            const playerLoaded = usePlayerStore.getState().loadPlayer(user.username);
+            if (!playerLoaded) {
+              console.log('🆕 New character, setting defaults...');
+              usePlayerStore.setState({
+                stats: {
+                  level: 1,
+                  xp: 0,
+                  xpToNext: 100,
+                  hp: 100,
+                  maxHp: 100,
+                  attack: 10,
+                  defense: 5,
+                  gold: 1000
+                },
+                equipment: { weapon: null, armor: null, accessory: null },
+                inventory: [],
+                location: 'guild-hall',
+                enemiesKilled: 0,
+                avatar: '/images/avatars/male-ta-default.jpg',
+                customAvatar: null
+              });
+            }
+            
+            // Load world state
+            const worldLoaded = useWorldStore.getState().loadWorld(user.username);
+            if (!worldLoaded) {
+              useWorldStore.getState().resetWorld();
+            }
+            
+            // Load quest state
+            useQuestStore.getState().loadQuests(user.username);
+            
+            // Load achievements
+            useAchievementStore.getState().loadAchievements(user.username);
+            
+            console.log(`✅ All data loaded for ${user.username}`);
+
+======================================================================
+VERIFICATION:
+======================================================================
+After applying both fixes:
+1. Compile: npx tsc --noEmit
+2. Build: npm run build:expo
+3. Test: Login, answer questions, refresh page - questions should NOT repeat!
+
+======================================================================

@@ -39,30 +39,73 @@ function App() {
           
           // Set global username for auto-save functionality
           (window as any).__currentUsername = user.username;
-          console.log('Restored current username for auto-save');
+          console.log('🔑 Restored current username for auto-save');
           
-          // CRITICAL FIX: Load from LIVE storage keys instead of stale user.characterData
-          console.log(`Loading LIVE data for ${user.username}...`);
-          
-          // Load player data from live storage
-          const playerLoaded = usePlayerStore.getState().loadPlayer(user.username);
-          console.log(playerLoaded ? `Loaded player data` : `New character`);
-          
-          // Load world state from live storage
-          const worldLoaded = useWorldStore.getState().loadWorld(user.username);
-          if (!worldLoaded) {
-            useWorldStore.getState().resetWorld();
+          // Restore character data if available
+          if (user.characterData) {
+            usePlayerStore.setState({
+              stats: user.characterData.stats,
+              equipment: user.characterData.equipment,
+              inventory: user.characterData.inventory,
+              location: user.characterData.location,
+              enemiesKilled: user.characterData.enemiesKilled,
+              avatar: user.characterData.avatar,
+              customAvatar: user.characterData.customAvatar,
+            });
+            
+            // Restore world state
+            if (user.characterData.worldState) {
+              useWorldStore.setState(user.characterData.worldState);
+              console.log(`🗺️ Restored world state for ${user.username}`);
+            } else {
+              // First time login or old data - start with defaults
+              useWorldStore.getState().resetWorld();
+              console.log(`🗺️ New world state for ${user.username}`);
+            }
+            
+            // Restore quest state
+            if (user.characterData.questState) {
+              useQuestStore.setState(user.characterData.questState);
+              console.log(`📜 Restored quest state for ${user.username}`);
+            } else {
+              // First time login or old data - quests will initialize from defaults
+              console.log(`📜 New quest state for ${user.username}`);
+            }
+            
+            // Restore achievements
+            if (user.characterData.achievements) {
+              const achievementStore = useAchievementStore.getState();
+              achievementStore.loadAchievements(user.username);
+              
+              // Merge saved achievements with default list
+              useAchievementStore.setState({
+                achievements: achievementStore.achievements.map(achievement => {
+                  const saved = user.characterData!.achievements!.find(a => a.id === achievement.id);
+                  if (saved) {
+                    return {
+                      ...achievement,
+                      unlocked: saved.unlocked,
+                      unlockedAt: saved.unlockedAt,
+                    };
+                  }
+                  return achievement;
+                }),
+              });
+              console.log(`🏆 Restored achievements for ${user.username}`);
+            } else {
+              // Initialize username for saving later
+              useAchievementStore.getState().loadAchievements(user.username);
+            console.log(`🏆 Restored achievements for ${user.username}`);
+            }
+            
+            // DON'T restore question history from current_user - it may be stale!
+            // CombatView will load from the dedicated questionHistory:${username} localStorage key
+            // which is updated in real-time during gameplay
+            console.log(`⚠️ Skipping questionHistory restore from current_user (may be stale)`);
+            console.log(`� CombatView will load fresh data from questionHistory:${user.username}`);
+            
+            console.log(`✅ Restored character data for ${user.username}`);
           }
-          console.log(worldLoaded ? `Loaded world state` : `New world`);
-          
-          // Quest state initializes from questData.json automatically
-          console.log(`Quest state initialized from defaults`);
-          
-          // Load achievements from live storage
-          useAchievementStore.getState().loadAchievements(user.username);
-          console.log(`Loaded achievements`);
-          
-          console.log(`All data loaded from LIVE storage keys`);
         } catch (error) {
           console.error('Failed to parse user data:', error);
           localStorage.removeItem('current_user');
@@ -164,19 +207,45 @@ function App() {
       <>
         <LoginRegistrationForm 
           onSuccess={async (user) => {
-            console.log('Login successful, loading character...');
+            console.log('🎮 Login successful, loading character...');
             localStorage.setItem('current_user', JSON.stringify(user));
             
-            // Set global username for auto-save
+            // Set global username for auto-save (redundant but ensures it's set)
             (window as any).__currentUsername = user.username;
             
-            // CRITICAL FIX: Load from LIVE storage keys instead of stale user.characterData
-            console.log(`Loading character data for ${user.username}...`);
-            
-            // Load player data
-            const playerLoaded = usePlayerStore.getState().loadPlayer(user.username);
-            if (!playerLoaded) {
-              console.log('New character, setting defaults...');
+            // If user has character data, restore it
+            if (user.characterData) {
+              console.log('📦 Restoring character data...');
+              usePlayerStore.setState({
+                stats: user.characterData.stats,
+                equipment: user.characterData.equipment,
+                inventory: user.characterData.inventory,
+                location: user.characterData.location,
+                enemiesKilled: user.characterData.enemiesKilled,
+                avatar: user.characterData.avatar,
+                customAvatar: user.characterData.customAvatar,
+              });
+              
+              // Restore world state
+              if (user.characterData.worldState) {
+                useWorldStore.setState(user.characterData.worldState);
+                console.log('🗺️ Restored world state');
+              } else {
+                // First time login - reset to defaults
+                useWorldStore.getState().resetWorld();
+                console.log('🗺️ New world state (first login)');
+              }
+              
+              // Restore quest state
+              if (user.characterData.questState) {
+                useQuestStore.setState(user.characterData.questState);
+                console.log('📜 Restored quest state');
+              } else {
+                console.log('📜 New quest state (first login)');
+              }
+            } else {
+              // New character - set defaults
+              console.log('🆕 New character, setting defaults...');
               usePlayerStore.setState({
                 stats: {
                   level: 1,
@@ -188,27 +257,22 @@ function App() {
                   defense: 5,
                   gold: 1000
                 },
-                equipment: { weapon: null, armor: null, accessory: null },
+                equipment: {
+                  weapon: null,
+                  armor: null,
+                  accessory: null
+                },
                 inventory: [],
-                location: 'guild-hall',
+                location: 'Elaria (Starting Village)',
                 enemiesKilled: 0,
-                avatar: '/images/avatars/male-ta-default.jpg',
+                avatar: 'warrior',
                 customAvatar: null
               });
-            }
-            
-            // Load world state
-            const worldLoaded = useWorldStore.getState().loadWorld(user.username);
-            if (!worldLoaded) {
+              
+              // Reset world and quest state for new character
               useWorldStore.getState().resetWorld();
+              console.log('🗺️ New world state (new character)');
             }
-            
-            // Quest state initializes from questData.json automatically
-            
-            // Load achievements
-            useAchievementStore.getState().loadAchievements(user.username);
-            
-            console.log(`All data loaded for ${user.username}`);
             
             setCurrentUser(user);
           }}
@@ -237,7 +301,7 @@ function App() {
       case 'market':
         return <MarketView />;
       case 'leaderboard':
-        return <Leaderboard key={activeView} />; // Force refresh when navigating to leaderboard
+        return <Leaderboard />;
       case 'players':
         return <PlayersView />;
       case 'classes':

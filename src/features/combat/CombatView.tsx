@@ -31,21 +31,38 @@ export const CombatView: React.FC = () => {
   
   // Load answered questions from localStorage on mount
   useEffect(() => {
+    console.log(`\n🔄 LOADING QUESTION HISTORY ON COMPONENT MOUNT...`);
     const userData = localStorage.getItem('current_user');
     if (userData) {
       try {
         const user = JSON.parse(userData);
-        const questionHistory = user.characterData?.questionHistory;
-        if (questionHistory) {
-          setAnsweredQuestionIds(new Set(questionHistory.answeredQuestions || []));
-          setQuestionPoints(questionHistory.totalPoints || 0);
-          setQuestionsCorrect(questionHistory.correctAnswers || 0);
-          setQuestionsWrong(questionHistory.wrongAnswers || 0);
+        const questionHistoryKey = `questionHistory:${user.username}`;
+        const historyData = localStorage.getItem(questionHistoryKey);
+        
+        console.log(`👤 Current user: ${user.username}`);
+        console.log(`🔑 Looking for key: ${questionHistoryKey}`);
+        
+        if (historyData) {
+          const history = JSON.parse(historyData);
+          const answeredIds = history.answeredQuestions || [];
+          console.log(`📥 Loaded from localStorage:`, answeredIds);
+          console.log(`📊 Total questions marked as answered: ${answeredIds.length}`);
+          setAnsweredQuestionIds(new Set(answeredIds));
+          setQuestionPoints(history.totalPoints || 0);
+          setQuestionsCorrect(history.correctAnswers || 0);
+          setQuestionsWrong(history.wrongAnswers || 0);
+          console.log(`✅ State updated with loaded history`);
+        } else {
+          console.log(`⚠️ No question history found for ${user.username} - starting fresh`);
+          setAnsweredQuestionIds(new Set());
         }
       } catch (error) {
-        console.error('Failed to load question history:', error);
+        console.error('❌ Error loading question history:', error);
       }
+    } else {
+      console.log(`⚠️ No current_user in localStorage - cannot load history`);
     }
+    console.log(`━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\n`);
   }, []);
   
   // Animation states
@@ -184,21 +201,100 @@ export const CombatView: React.FC = () => {
     checkEnemyAbilities('combat-start');
   }, []);
   
+  // Check available attack categories when entering combat
+  React.useEffect(() => {
+    console.log('🎮 ENTERING NEW FIGHT - Checking available attack categories...');
+    console.log(`📋 Total questions in game: 15`);
+    console.log(`✅ Questions answered correctly by this character: ${answeredQuestionIds.size}`);
+    console.log(`📝 Answered question IDs: [${Array.from(answeredQuestionIds).join(', ')}]`);
+    
+    const userData = localStorage.getItem('current_user');
+    if (!userData) return;
+    
+    try {
+      const user = JSON.parse(userData);
+      const questionHistoryKey = `questionHistory:${user.username}`;
+      const historyData = localStorage.getItem(questionHistoryKey);
+      
+      if (historyData) {
+        const history = JSON.parse(historyData);
+        console.log(`� Loaded from storage: ${history.answeredQuestions?.length || 0} questions logged`);
+        console.log(`💯 Total points earned: ${history.totalPoints || 0}`);
+        console.log(`✅ Correct: ${history.correctAnswers || 0}, ❌ Wrong: ${history.wrongAnswers || 0}`);
+      }
+      
+      // Check each attack category
+      console.log('\n📊 ATTACK AVAILABILITY CHECK:');
+      specialAttacks.forEach((attack) => {
+        const categoryData = (quizData.categories as any)[attack.category];
+        const totalQuestions = categoryData?.questions?.length || 0;
+        const availableQuestions = categoryData?.questions?.filter(
+          (q: QuizQuestion) => !answeredQuestionIds.has(q.id)
+        ) || [];
+        
+        if (availableQuestions.length === 0) {
+          console.log(`  ❌ ${attack.name} (${attack.category}): BLOCKED - All ${totalQuestions} questions answered`);
+        } else {
+          console.log(`  ✅ ${attack.name} (${attack.category}): AVAILABLE - ${availableQuestions.length}/${totalQuestions} questions remaining`);
+        }
+      });
+      console.log('━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\n');
+    } catch (error) {
+      console.error('Error checking available categories:', error);
+    }
+  }, [answeredQuestionIds, enemy.id]); // Re-check when answered questions change or new enemy
+  
   // Quiz helper functions
   const getRandomQuestion = (category: CategoryName): QuizQuestion | null => {
-    const categoryData = (quizData.categories as any)[category];
-    if (!categoryData || !categoryData.questions) return null;
+    console.log(`\n━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━`);
+    console.log(`🎯 SELECTING QUESTION FOR CATEGORY: ${category}`);
     
-    // Filter out questions that have already been answered by this character
+    const categoryData = (quizData.categories as any)[category];
+    if (!categoryData || !categoryData.questions) {
+      console.log(`❌ Category ${category} not found!`);
+      return null;
+    }
+    
+    const totalInCategory = categoryData.questions.length;
+    console.log(`📚 Total questions in ${category}: ${totalInCategory}`);
+    console.log(`✅ Already answered correctly: ${answeredQuestionIds.size} total`);
+    
+    // Filter out questions that have already been answered CORRECTLY by this character
+    // CRITICAL: Double-check to prevent any duplicates
     const availableQuestions = categoryData.questions.filter(
       (q: QuizQuestion) => !answeredQuestionIds.has(q.id)
     );
     
-    if (availableQuestions.length === 0) return null;
+    console.log(`🔍 Filtering out answered questions from ${category}...`);
+    console.log(`   All questions in category: [${categoryData.questions.map((q: QuizQuestion) => q.id).join(', ')}]`);
+    console.log(`   Already answered: [${Array.from(answeredQuestionIds).join(', ')}]`);
+    console.log(`   ✅ Available after filter: ${availableQuestions.length}/${totalInCategory}`);
+    console.log(`   Available IDs: [${availableQuestions.map((q: QuizQuestion) => q.id).join(', ')}]`);
     
-    // Select random question
+    if (availableQuestions.length === 0) {
+      console.log(`⚠️ NO MORE QUESTIONS IN ${category}! All answered correctly.`);
+      console.log(`━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\n`);
+      return null;
+    }
+    
+    // Select random question from available pool
     const randomIndex = Math.floor(Math.random() * availableQuestions.length);
-    return availableQuestions[randomIndex];
+    const selectedQuestion = availableQuestions[randomIndex];
+    
+    // EXTRA VALIDATION: Double-check this question hasn't been answered
+    if (answeredQuestionIds.has(selectedQuestion.id)) {
+      console.error(`🚨 CRITICAL ERROR: Selected already-answered question ${selectedQuestion.id}! This should never happen!`);
+      console.error(`🔍 answeredQuestionIds:`, Array.from(answeredQuestionIds));
+      console.error(`🔍 availableQuestions:`, availableQuestions.map((q: QuizQuestion) => q.id));
+      console.log(`━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\n`);
+      return null; // Prevent showing duplicate question
+    }
+    
+    console.log(`✅ SELECTED: ${selectedQuestion.id} (Random index ${randomIndex} from ${availableQuestions.length} available)`);
+    console.log(`📋 Question: "${selectedQuestion.question.substring(0, 50)}..."`);
+    console.log(`💰 Points: ${selectedQuestion.points}`);
+    console.log(`━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\n`);
+    return selectedQuestion;
   };
   
   const handleAttackSelection = (attack: SpecialAttack) => {
@@ -243,15 +339,55 @@ export const CombatView: React.FC = () => {
     // Regular attack question
     if (!selectedAttack) return;
     
+    // ⚠️ CRITICAL CHECK: Verify this question hasn't already been answered
+    if (answeredQuestionIds.has(currentQuestion.id)) {
+      console.error(`🚨 CRITICAL ERROR: Attempting to answer already-answered question ${currentQuestion.id}!`);
+      console.error(`This question should have been filtered out during selection!`);
+      console.error(`Current answeredQuestionIds:`, Array.from(answeredQuestionIds));
+      addCombatLog(`⚠️ Error: This question was already answered. Please select a different attack.`);
+      setCombatPhase('select-attack');
+      setCurrentQuestion(null);
+      setShuffledAnswers([]);
+      setSelectedAttack(null);
+      return;
+    }
+    
     // Check if the selected shuffled answer is correct
     const isCorrect = shuffledAnswers[answerIndex].correct;
+    
+    console.log(`\n━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━`);
+    console.log(`📝 ANSWER SUBMITTED FOR QUESTION: ${currentQuestion.id}`);
+    console.log(`❓ Question: "${currentQuestion.question}"`);
+    console.log(`💡 Answer given: "${shuffledAnswers[answerIndex].text}"`);
+    console.log(`${isCorrect ? '✅ CORRECT!' : '❌ WRONG!'}`);
     
     // Calculate points
     const basePoints = currentQuestion.points || 50;
     const pointsChange = isCorrect ? basePoints : -Math.floor(basePoints * 0.25); // 25% penalty for wrong answer
     
-    // Calculate new values (state updates are async, so compute manually)
-    const newAnsweredQuestions = [...answeredQuestionIds, currentQuestion.id];
+    console.log(`💰 Points: ${pointsChange > 0 ? '+' : ''}${pointsChange}`);
+    
+    // CRITICAL: Only log correctly answered questions!
+    let newAnsweredQuestions: string[];
+    if (isCorrect) {
+      // Double-check this question isn't already in the set (should never happen, but be safe)
+      if (answeredQuestionIds.has(currentQuestion.id)) {
+        console.warn(`⚠️ WARNING: Question ${currentQuestion.id} was already answered! Skipping duplicate.`);
+        newAnsweredQuestions = Array.from(answeredQuestionIds);
+      } else {
+        newAnsweredQuestions = [...answeredQuestionIds, currentQuestion.id];
+        console.log(`✅ LOGGING QUESTION ${currentQuestion.id} AS ANSWERED`);
+        console.log(`   Before: ${answeredQuestionIds.size} questions answered`);
+        console.log(`   After: ${newAnsweredQuestions.length} questions answered`);
+        console.log(`   New list: [${newAnsweredQuestions.join(', ')}]`);
+      }
+    } else {
+      // Wrong answer - don't add to answered list so it can be tried again
+      newAnsweredQuestions = Array.from(answeredQuestionIds);
+      console.log(`❌ NOT LOGGING - Question ${currentQuestion.id} can be retried later`);
+      console.log(`   Answered questions remain: ${answeredQuestionIds.size}`);
+    }
+    
     const newTotalPoints = questionPoints + pointsChange;
     const newCorrectAnswers = questionsCorrect + (isCorrect ? 1 : 0);
     const newWrongAnswers = questionsWrong + (isCorrect ? 0 : 1);
@@ -261,6 +397,12 @@ export const CombatView: React.FC = () => {
     setQuestionPoints(newTotalPoints);
     setQuestionsCorrect(newCorrectAnswers);
     setQuestionsWrong(newWrongAnswers);
+    
+    console.log(`📊 UPDATED STATS:`);
+    console.log(`   Total answered correctly: ${newAnsweredQuestions.length}/15`);
+    console.log(`   Total points: ${newTotalPoints}`);
+    console.log(`   Correct answers: ${newCorrectAnswers}`);
+    console.log(`   Wrong answers: ${newWrongAnswers}`);
     
     // Update database and localStorage
     const userData = localStorage.getItem('current_user');
@@ -276,24 +418,51 @@ export const CombatView: React.FC = () => {
           wrongAnswers: newWrongAnswers,
         };
         
-        // Update database with complete history (await to ensure it saves)
+        console.log(`\n💾 SAVING TO DATABASE...`);
+        console.log(`   Character: ${user.username}`);
+        console.log(`   Questions to save: [${newAnsweredQuestions.join(', ')}]`);
+        console.log(`   Points to save: ${newTotalPoints}`);
+        
+        // CRITICAL: Await database save to ensure it completes BEFORE attack executes
+        console.log(`💾 Step 1/3: Updating question history in Dexie...`);
         await updateQuestionHistory(user.username, updatedQuestionHistory);
-        console.log(`✅ Question ${currentQuestion.id} saved to database`);
+        console.log(`   ✅ Question ${currentQuestion.id} saved to Dexie`);
         
         // Update player's score in database
+        console.log(`💾 Step 2/3: Updating player scores in Dexie...`);
         await updatePlayer(user.username, {
           totalScore: newTotalPoints,
           highestScore: Math.max(newTotalPoints, user.highestScore || 0)
         });
-        console.log(`✅ Score updated: ${newTotalPoints} points`);
+        console.log(`   ✅ Player scores updated in Dexie database (Total: ${newTotalPoints})`);
+        console.log(`   📊 Dexie now has: totalScore=${newTotalPoints}, highestScore=${Math.max(newTotalPoints, user.highestScore || 0)}`);
         
-        // Update localStorage
+        // Update current_user in localStorage with new scores (for leaderboard)
+        const updatedUser = {
+          ...user,
+          totalScore: newTotalPoints,
+          highestScore: Math.max(newTotalPoints, user.highestScore || 0)
+        };
+        localStorage.setItem('current_user', JSON.stringify(updatedUser));
+        console.log(`   ✅ current_user updated with new scores`);
+        
+        // Dispatch custom event to notify leaderboard to refresh
+        window.dispatchEvent(new Event('scoreUpdated'));
+        
+        // Update localStorage (synchronous backup)
+        console.log(`💾 Step 3/3: Saving to localStorage backup...`);
         localStorage.setItem(
           `questionHistory:${user.username}`,
           JSON.stringify(updatedQuestionHistory)
         );
+        console.log(`   ✅ localStorage backup saved`);
+        
+        console.log(`✅ DATABASE SAVE COMPLETE!`);
+        console.log(`   All storage layers updated before attack executes`);
+        console.log(`━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\n`);
       } catch (error) {
         console.error('Failed to update question history:', error);
+        alert('⚠️ Warning: Failed to save question progress. Your answer may not be recorded.');
       }
     }
     
@@ -308,6 +477,7 @@ export const CombatView: React.FC = () => {
     setTimeout(() => {
       if (isCorrect) {
         addCombatLog(`✅ Correct! +${pointsChange} points`);
+        console.log(`🎯 Executing attack - question ${currentQuestion.id} already saved to database`);
         executeSpecialAttack(selectedAttack);
       } else {
         // Wrong answer - player misses completely
@@ -335,8 +505,23 @@ export const CombatView: React.FC = () => {
     const basePoints = currentQuestion.points || 50;
     const pointsChange = isCorrect ? basePoints : -Math.floor(basePoints * 0.25); // 25% penalty for wrong answer
     
-    // Calculate new values (state updates are async, so compute manually)
-    const newAnsweredQuestions = [...answeredQuestionIds, currentQuestion.id];
+    // CRITICAL: Only log correctly answered questions!
+    let newAnsweredQuestions: string[];
+    if (isCorrect) {
+      // Double-check this question isn't already in the set (should never happen, but be safe)
+      if (answeredQuestionIds.has(currentQuestion.id)) {
+        console.warn(`⚠️ WARNING: DEFENSE Question ${currentQuestion.id} was already answered! Skipping duplicate.`);
+        newAnsweredQuestions = Array.from(answeredQuestionIds);
+      } else {
+        newAnsweredQuestions = [...answeredQuestionIds, currentQuestion.id];
+        console.log(`✅ DEFENSE CORRECT - Logging question ${currentQuestion.id} as answered`);
+      }
+    } else {
+      // Wrong answer - don't add to answered list so it can be tried again
+      newAnsweredQuestions = Array.from(answeredQuestionIds);
+      console.log(`❌ DEFENSE WRONG - Question ${currentQuestion.id} NOT logged (can retry later)`);
+    }
+    
     const newTotalPoints = questionPoints + pointsChange;
     const newCorrectAnswers = questionsCorrect + (isCorrect ? 1 : 0);
     const newWrongAnswers = questionsWrong + (isCorrect ? 0 : 1);
@@ -361,24 +546,39 @@ export const CombatView: React.FC = () => {
           wrongAnswers: newWrongAnswers,
         };
         
-        // Update database with complete history (await to ensure it saves)
+        // CRITICAL: Await database save to ensure it completes BEFORE continuing
         await updateQuestionHistory(user.username, updatedQuestionHistory);
-        console.log(`✅ Question ${currentQuestion.id} saved to database`);
+        console.log(`✅ DEFENSE Question ${currentQuestion.id} saved to database`);
         
         // Update player's score in database
         await updatePlayer(user.username, {
           totalScore: newTotalPoints,
           highestScore: Math.max(newTotalPoints, user.highestScore || 0)
         });
-        console.log(`✅ Score updated: ${newTotalPoints} points`);
+        console.log(`✅ DEFENSE Score updated in Dexie database: ${newTotalPoints} points`);
+        console.log(`   📊 Dexie now has: totalScore=${newTotalPoints}, highestScore=${Math.max(newTotalPoints, user.highestScore || 0)}`);
         
-        // Update localStorage
+        // Update current_user in localStorage with new scores (for leaderboard)
+        const updatedUser = {
+          ...user,
+          totalScore: newTotalPoints,
+          highestScore: Math.max(newTotalPoints, user.highestScore || 0)
+        };
+        localStorage.setItem('current_user', JSON.stringify(updatedUser));
+        console.log(`✅ DEFENSE current_user updated with new scores`);
+        
+        // Dispatch custom event to notify leaderboard to refresh
+        window.dispatchEvent(new Event('scoreUpdated'));
+        
+        // Update localStorage (synchronous backup)
         localStorage.setItem(
           `questionHistory:${user.username}`,
           JSON.stringify(updatedQuestionHistory)
         );
+        console.log(`💾 DEFENSE Question history saved to all storage layers`);
       } catch (error) {
         console.error('Failed to update question history:', error);
+        alert('⚠️ Warning: Failed to save question progress. Your answer may not be recorded.');
       }
     }
     

@@ -2,7 +2,7 @@
   {
     "id": "coin-rat",
     "name": "Tax Dodger Cat",
-    "image": "/images/enemies/tax-collector.svg",
+    "image": "/images/enemies/Tax-Dodger-Cat.jpg",
     "statRanges": {
       "hp": { "min": 12, "max": 18 },
       "attack": { "min": 3, "max": 5 },
@@ -23,7 +23,7 @@
   {
     "id": "tax-collector-minion",
     "name": "Petty Tax Evader",
-    "image": "/images/enemies/tax-collector.svg",
+    "image": "/images/enemies/Petty-Tax-Evaders.jpg",
     "statRanges": {
       "hp": { "min": 20, "max": 30 },
       "attack": { "min": 5, "max": 8 },
@@ -53,7 +53,7 @@
   {
     "id": "bandit-thief",
     "name": "Offshore Accountant",
-    "image": "/images/enemies/audit-phantom.svg",
+    "image": "/images/enemies/Offshore-Accountants.jpg",
     "statRanges": {
       "hp": { "min": 16, "max": 24 },
       "attack": { "min": 6, "max": 9 },
@@ -78,7 +78,7 @@
   {
     "id": "corrupted-guard",
     "name": "Corrupted Businessman",
-    "image": "/images/enemies/revenue-enforcer.svg",
+    "image": "/images/enemies/Corrupted-Businessmen.jpg",
     "statRanges": {
       "hp": { "min": 30, "max": 40 },
       "attack": { "min": 7, "max": 10 },
@@ -111,7 +111,7 @@
   {
     "id": "arim-dragon",
     "name": "ARIM - The Tax Evasion Dragon",
-    "image": "/images/enemies/arim-dragon.svg",
+    "image": "/images/enemies/Arim-the-Dragon.jpg",
     "statRanges": {
       "hp": { "min": 600, "max": 600 },
       "attack": { "min": 25, "max": 35 },
